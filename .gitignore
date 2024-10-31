@@ -2,5 +2,9 @@ update-Git
 *.log
 Data/Data.bin
 Data/Data.hash
-Saves/*
+Saves/Chat*
+Saves/Data/*
+Saves/Guilds/*
+Saves/Items/*
+Saves/Mobiles/*
 Backup/*
