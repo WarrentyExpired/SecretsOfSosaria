@@ -2,6 +2,5 @@ update-Git
 *.log
 Data/Data.bin
 Data/Data.hash
-Saves/Items/Items*
-Saves/Mobiles/Mobiles.*
+Saves/*
 Backup/*

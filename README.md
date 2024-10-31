@@ -9,3 +9,5 @@ Things that need fixed
   - The Bless spell when used by The Socerer
       Its not applying the proper STAT boost
     
+This to add/update
+   - Finish updating the bard song spells for the Troubadour
