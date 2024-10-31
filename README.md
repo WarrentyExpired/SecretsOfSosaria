@@ -11,3 +11,4 @@ Things that need fixed
 
 This to add/update
    - Finish updating the bard song spells for the Troubadour
+   - Add the Chemist Subclass.
