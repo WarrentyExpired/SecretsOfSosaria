@@ -1584,11 +1584,15 @@ namespace Server
 				if( oldValue != value )
 				{
 					m_Hunger = value;
-
 					EventSink.InvokeHungerChanged( new HungerChangedEventArgs( this, oldValue ) );
+					OnHungerChange(oldValue);
 				}
 			}
 		}
+
+        	public virtual void OnHungerChange(int oldValue)
+        	{
+        	}
 
 		[CommandProperty( AccessLevel.GameMaster )]
 		public int Thirst
@@ -1599,9 +1603,18 @@ namespace Server
 			}
 			set
 			{
-				m_Thirst = value;
-			}
+				int oldValue = m_Thirst;
+				if (oldValue != value)
+				{
+					m_Thirst = value;
+					OnThirstChange(oldValue);
+				}
+			}       
 		}
+
+        	public virtual void OnThirstChange(int oldValue)
+        	{
+        	}
 
 		[CommandProperty( AccessLevel.GameMaster )]
 		public int BAC
@@ -2561,11 +2574,17 @@ namespace Server
 			{
 				if( m_TithingPoints != value )
 				{
+					int oldValue = m_TithingPoints;
 					m_TithingPoints = value;
 
 					Delta( MobileDelta.TithingPoints );
+					OnTithingPointsChange(oldValue);
 				}
 			}
+		}
+		
+		public virtual void OnTithingPointsChange(int oldValue)
+		{
 		}
 
 		[CommandProperty( AccessLevel.GameMaster )]
