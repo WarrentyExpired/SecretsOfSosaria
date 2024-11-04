@@ -44,7 +44,7 @@ namespace Server.Custom
                     case Layer.Shirt:
                     case Layer.Shoes:
                     case Layer.Waist:
-                        if (item != null && !(item is BaseClothing || item is IClothingStub)) return false;
+                        if (item != null && !(item is BaseClothing || item is IClothingStub || item is BaseTrinket)) return false;
                         break;
                 }
             }
