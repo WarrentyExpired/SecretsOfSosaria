@@ -20,7 +20,8 @@ using Server.Regions;
 using Server.Accounting;
 using Server.Engines.Craft;
 using Server.Engines.PartySystem;
-
+using Server.Custom;
+using Server.Custom.Items;
 namespace Server.Mobiles
 {
 	#region Enums
@@ -242,6 +243,16 @@ namespace Server.Mobiles
 		private List<Mobile> m_AutoStabled;
 		private List<Mobile> m_AllFollowers;
 		private List<Mobile> m_RecentlyReported;
+
+		private SpecializationType m_customClass;
+		public SpecializationType CustomClass
+		{
+			get
+			{
+				return m_customClass;
+			}
+        }
+
 
 		#region Getters & Setters
 
@@ -717,6 +728,23 @@ namespace Server.Mobiles
 			return true;
 		}
 
+        public override bool EquipItem(Item item)
+        {
+			if (!base.EquipItem(item)) return false;
+
+            Items.ForEach(i =>
+            {
+                var observer = i as IEquipmentObserver;
+                if (observer == null) return;
+
+                observer.PlayerItemEquipped(this, item);
+            });
+            CustomClasses.Activate(this);
+
+            return true;
+        }
+
+
 		public override int GetPacketFlags()
 		{
 			int flags = base.GetPacketFlags();
@@ -802,6 +830,7 @@ namespace Server.Mobiles
 				this.Hue = Utility.RandomSkinColor();
 				this.HairHue = Utility.RandomHairHue();
 			}
+            CustomClasses.Activate(this);
 		}
 
 		public virtual void UpdateFollowers(){
@@ -955,8 +984,14 @@ namespace Server.Mobiles
 				return;
 			}
 
-			if( from is PlayerMobile )
-				((PlayerMobile)from).ClaimAutoStabledPets();
+			//if( from is PlayerMobile )
+			//	((PlayerMobile)from).ClaimAutoStabledPets();
+
+			if( from is PlayerMobile ) {
+				PlayerMobile player = (PlayerMobile)from;
+				player.ClaimAutoStabledPets();
+				CustomClasses.Activate(player);
+			}
 		}
 
 		private bool m_NoDeltaRecursion;
@@ -1332,6 +1367,17 @@ namespace Server.Mobiles
 
 			if ( this.NetState != null )
 				CheckLightLevels( false );
+
+            		Items.ForEach(i =>
+			{
+				var observer = i as IEquipmentObserver;
+				if (observer == null) return;
+
+				observer.PlayerItemRemoved(this, item);
+			});
+
+            		CustomClasses.Activate(this);
+
 
 			Server.Gumps.QuickBar.RefreshQuickBar( this );
 			Server.Gumps.RegBar.RefreshRegBar( this );
@@ -2973,6 +3019,16 @@ namespace Server.Mobiles
 			}
 		}
 
+		public bool Troubadour()
+		{
+			return CustomClass == SpecializationType.Troubadour;
+		}
+
+		public bool Sorcerer()
+		{
+			return CustomClass == SpecializationType.Sorcerer;
+		}
+
 		private void RevertMods()
 		{
 			HueMod = -1;
@@ -3954,6 +4010,22 @@ namespace Server.Mobiles
 					break;
 				}
 			}
+
+			switch(CustomClass)
+			{
+				case SpecializationType.Troubadour:
+				list.Add("Wandering Troubadour - teller of tales.");
+					break;
+
+				case SpecializationType.Sorcerer:
+				list.Add("Sorcerer of the hidden arts.");
+					break;
+
+				case SpecializationType.None:
+				default:
+					break;
+			}
+
 		}
 
 		protected override bool OnMove( Direction d )
@@ -4014,6 +4086,39 @@ namespace Server.Mobiles
 					BuffInfo.CleanupIcons( this, true );
 			}
 		}
+
+	        public override void OnSkillChange( SkillName skill, double oldBase )
+	        {
+	            Items.ForEach(i =>
+	            {
+	                var observer = i as ISkillObserver;
+	                if (observer == null) return;
+	                observer.PlayerSkillChanged(this, skill);
+	         });
+
+	                CustomClasses.Activate(this);
+		}
+
+		public override void OnAccessLevelChanged( AccessLevel oldLevel )
+		{
+			if ( AccessLevel == AccessLevel.Player )
+				IgnoreMobiles = false;
+			else
+				IgnoreMobiles = true;
+		}
+
+		public override void OnRawStatChange( StatType stat, int oldValue )
+	        {
+			Items.ForEach(item =>
+			{
+				var observer = item as IStatObserver;
+				if (observer == null) return;
+
+				observer.PlayerStatChanged(this, stat);
+			});
+
+			         CustomClasses.Activate(this);
+	        }
 
 		#region Fastwalk Prevention
 		private static bool FastwalkPrevention = true; // Is fastwalk prevention enabled?
@@ -4645,7 +4750,73 @@ namespace Server.Mobiles
 
 			m_AutoStabled.Clear();
 		}
-	}
+
+        public void SetSpecialization(SpecializationType specialization)
+        {
+            if (m_customClass == specialization) return;
+
+            m_customClass = specialization;
+            RemoveNonPersistentBuffs();
+            if (NetState == null) return;
+
+            if (specialization == SpecializationType.None)
+            {
+                FixedParticles(0x374A, 1, 14, 0x13B5, EffectLayer.Waist); // Red particles
+                PlaySound(0x1D5); // wisp4
+            }
+            else
+            {
+                FixedParticles(0x376A, 1, 14, 0x13B5, EffectLayer.Waist); // Blue particles
+                PlaySound(0x511); // Mirror image
+            }
+
+			Items.ForEach(item =>
+			{
+				var observer = item as ISpecializationObserver;
+				if (observer == null) return;
+
+				observer.SpecializationUpdated(this, specialization);
+			});
+            InvalidateProperties();
+        }
+
+        private void RemoveNonPersistentBuffs()
+        {
+            if (m_BuffTable != null)
+            {
+                List<BuffInfo> list = new List<BuffInfo>();
+
+                foreach (BuffInfo buff in m_BuffTable.Values)
+                {
+                    if (!buff.RetainThroughDeath)
+                    {
+                        list.Add(buff);
+                    }
+					else
+                    {
+                        switch (buff.ID)
+                        {
+                            case BuffIcon.ReactiveArmor:
+                                list.Add(buff);
+                                break;
+                        }
+                    }
+                }
+
+                foreach (BuffInfo buff in list)
+                {
+                    RemoveBuff(buff);
+
+                    switch (buff.ID)
+                    {
+                        case BuffIcon.ReactiveArmor:
+			  // ReactiveArmorSpell.EndArmor(this); <--- Need fixed Causes Errors
+                            break;
+                    }
+                }
+            }
+        }
+    }
 
 	public enum NoLongUsedCellType
 	{

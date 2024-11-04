@@ -3,11 +3,30 @@ using System.Collections;
 using Server.Items;
 using Server.Targeting;
 using Server.Mobiles;
+using Server.Multis;
+using Server.Regions;
 
 namespace Server.SkillHandlers
 {
 	public class Discordance
 	{
+		public static int Effect(Mobile from, Mobile targ) {
+			int effect = (int)(from.Skills[SkillName.Discordance].Value / 5.0 );
+			if (from is PlayerMobile && ((PlayerMobile)from).Troubadour())
+				effect = (int)(from.Skills[SkillName.Discordance].Value / 3.0 );
+			if ( Core.SE && BaseInstrument.GetBaseDifficulty( targ ) >= 160.0 )
+				effect /= 2;
+			return effect;
+		}
+		public static double Scalar(int effect) {
+			return (effect * 0.01);
+		}
+		public static int ReduceValue(Mobile from, Mobile targ, int value) {
+			int effect = Discordance.Effect(from, targ);
+			double scalar = Discordance.Scalar(effect);
+			int reduced = (int)(0 - (value*scalar));
+			return reduced;
+		}
 		public static void Initialize()
 		{
 			SkillInfo.Table[(int)SkillName.Discordance].Callback = new SkillUseCallback( OnUse );
@@ -15,7 +34,19 @@ namespace Server.SkillHandlers
 
 		public static TimeSpan OnUse( Mobile m )
 		{
-			m.RevealingAction();
+				if (m is PlayerMobile && ((PlayerMobile)m).Troubadour() )
+				{
+					double odds = (m.Skills[SkillName.Musicianship].Value + m.Skills[SkillName.Stealth].Value / 500) + (m.Dex/500);
+					if (odds > 0.95)
+						odds = 0.95;
+
+					if (Utility.RandomDouble() > odds)
+					{
+						m.RevealingAction();
+					}
+				}
+				else
+					m.RevealingAction();
 
 			BaseInstrument.PickInstrument( m, new InstrumentPickedCallback( OnPickedInstrument ) );
 
@@ -24,13 +55,30 @@ namespace Server.SkillHandlers
 
 		public static void OnPickedInstrument( Mobile from, BaseInstrument instrument )
 		{
-			from.RevealingAction();
+				if (from is PlayerMobile && ((PlayerMobile)from).Troubadour() )
+				{
+					double odds = (from.Skills[SkillName.Musicianship].Value + from.Skills[SkillName.Stealth].Value / 500) + (from.Dex/350);
+					if (odds > 0.90)
+						odds = 0.90;
+
+					if (Utility.RandomDouble() > odds)
+					{
+						from.RevealingAction();
+					}
+				}
+				else
+					from.RevealingAction();
+			
 			from.SendLocalizedMessage( 1049541 ); // Choose the target for your song of discordance.
 			from.Target = new DiscordanceTarget( from, instrument );
-			from.NextSkillTime = DateTime.Now + TimeSpan.FromSeconds( 6.0 );
+			Region reg = Region.Find( from.Location, from.Map );
+			if (from is PlayerMobile && ((PlayerMobile)from).Troubadour())
+				from.NextSkillTime = DateTime.Now + TimeSpan.FromSeconds( 4.0 );
+			else 
+				from.NextSkillTime = DateTime.Now + TimeSpan.FromSeconds( 6.0 );
 		}
 
-		private class DiscordanceInfo
+		public class DiscordanceInfo
 		{
 			public Mobile m_From;
 			public Mobile m_Creature;
@@ -44,7 +92,7 @@ namespace Server.SkillHandlers
 			{
 				m_From = from;
 				m_Creature = creature;
-				m_EndTime = DateTime.Now;
+				m_EndTime = DateTime.UtcNow;
 				m_Ending = false;
 				m_Effect = effect;
 				m_Mods = mods;
@@ -65,6 +113,9 @@ namespace Server.SkillHandlers
 					else if ( mod is SkillMod )
 						m_Creature.AddSkillMod( (SkillMod) mod );
 				}
+				
+				if (m_Creature is BaseCreature)
+					((BaseCreature)m_Creature).IsDiscorded = true;
 			}
 
 			public void Clear()
@@ -79,13 +130,14 @@ namespace Server.SkillHandlers
 						m_Creature.RemoveStatMod( ((StatMod) mod).Name );
 					else if ( mod is SkillMod )
 						m_Creature.RemoveSkillMod( (SkillMod) mod );
-
-					BuffInfo.RemoveBuff( m_Creature, BuffIcon.Discordance );
 				}
+
+				if (m_Creature is BaseCreature)
+					((BaseCreature)m_Creature).IsDiscorded = false;
 			}
 		}
 
-		private static Hashtable m_Table = new Hashtable();
+		public static Hashtable m_Table = new Hashtable();
 
 		public static bool GetEffect( Mobile targ, ref int effect )
 		{
@@ -98,7 +150,26 @@ namespace Server.SkillHandlers
 			return true;
 		}
 
-		private static void ProcessDiscordance( DiscordanceInfo info )
+		public static bool IsDiscorded(Mobile targ)
+		{
+			if (targ == null || targ.Deleted)
+				return false;
+			
+			if (targ is BaseCreature && ((BaseCreature)targ).IsDiscorded)
+				return true;
+
+			if (!(targ is BaseCreature))
+			{
+				DiscordanceInfo info = m_Table[targ] as DiscordanceInfo;
+
+				if ( info != null || m_Table.Contains( targ ))
+					return true;
+			}
+
+			return false;
+		}
+
+		public static void ProcessDiscordance( DiscordanceInfo info )
 		{
 			Mobile from = info.m_From;
 			Mobile targ = info.m_Creature;
@@ -106,7 +177,7 @@ namespace Server.SkillHandlers
 
 			// According to uoherald bard must remain alive, visible, and 
 			// within range of the target or the effect ends in 15 seconds.
-			if ( !targ.Alive || targ.Deleted || !from.Alive || from.Hidden )
+			if ( !targ.Alive || targ.Deleted || !from.Alive || from.Hidden)
 				ends = true;
 			else
 			{
@@ -117,7 +188,7 @@ namespace Server.SkillHandlers
 					ends = true;
 			}
 
-			if ( ends && info.m_Ending && info.m_EndTime < DateTime.Now )
+			if ( ends && info.m_Ending && info.m_EndTime < DateTime.UtcNow )
 			{
 				if ( info.m_Timer != null )
 					info.m_Timer.Stop();
@@ -130,12 +201,15 @@ namespace Server.SkillHandlers
 				if ( ends && !info.m_Ending )
 				{
 					info.m_Ending = true;
-					info.m_EndTime = DateTime.Now + TimeSpan.FromSeconds( 15 );
+					if (from is PlayerMobile && ((PlayerMobile)from).Troubadour())
+						info.m_EndTime = DateTime.UtcNow + TimeSpan.FromSeconds( 20.0 );
+					else
+						info.m_EndTime = DateTime.UtcNow + TimeSpan.FromSeconds( 15.0 );
 				}
 				else if ( !ends )
 				{
 					info.m_Ending = false;
-					info.m_EndTime = DateTime.Now;
+					info.m_EndTime = DateTime.UtcNow;
 				}
 
 				targ.FixedEffect( 0x376A, 1, 32 );
@@ -153,8 +227,21 @@ namespace Server.SkillHandlers
 
 			protected override void OnTarget( Mobile from, object target )
 			{
-				from.RevealingAction();
-				from.NextSkillTime = DateTime.Now + TimeSpan.FromSeconds( 1.0 );
+				if (from is PlayerMobile && ((PlayerMobile)from).Troubadour() )
+				{
+					double odds = (from.Skills[SkillName.Musicianship].Value + from.Skills[SkillName.Stealth].Value / 500) + (from.Dex/500);
+					if (odds > 0.95)
+						odds = 0.95;
+
+					if (Utility.RandomDouble() > odds)
+					{
+						from.RevealingAction();
+					}
+				}
+				else
+					from.RevealingAction();
+					
+				from.NextSkillTime = DateTime.Now + TimeSpan.FromSeconds( 10.0 );
 
 				if ( m_Instrument.Parent != from && !m_Instrument.IsChildOf( from.Backpack ) )
 				{
@@ -164,93 +251,81 @@ namespace Server.SkillHandlers
 				{
 					Mobile targ = (Mobile)target;
 
-					if ( targ == from || (targ is BaseCreature && !from.CanBeHarmful( targ, false ) && ((BaseCreature)targ).ControlMaster != from) )
+					if ( (targ is BaseCreature && !from.CanBeHarmful( targ, false ) && ((BaseCreature)targ).ControlMaster != from) )
 					{
 						from.SendLocalizedMessage( 1049535 ); // A song of discord would have no effect on that.
 					}
-					else if ( m_Table.Contains( targ ) ) //Already discorded
+					else if ( !targ.Player )
 					{
-						from.SendLocalizedMessage( 1049537 );// Your target is already in discord.
+						ProcessDiscordance(from, targ);
 					}
-					else if ( targ is Mobile )
+					if (targ == from && targ is PlayerMobile && ((PlayerMobile)from).Troubadour() && ((Mobile)targ).Map != null )
 					{
-						double diff = m_Instrument.GetDifficultyFor( targ ) - 10.0;
-						double music = from.Skills[SkillName.Musicianship].Value;
 
-						if ( music > 100.0 )
-							diff -= (music - 100.0) * 0.5;
-
-						if ( !BaseInstrument.CheckMusicianship( from ) )
+						Region reg = Region.Find( from.Location, from.Map );
+						if (reg.IsPartOf( typeof( PublicRegion ) ) || reg.IsPartOf( typeof( TownRegion ) ))
 						{
-							from.SendLocalizedMessage( 500612 ); // You play poorly, and there is no effect.
-							m_Instrument.PlayInstrumentBadly( from );
-							m_Instrument.ConsumeUse( from );
+							from.SendMessage("You can't do that here.");
+							return;
 						}
-						else if ( from.CheckTargetSkill( SkillName.Discordance, target, diff-25.0, diff+25.0 ) )
+
+						int range = BaseInstrument.GetBardRange( from, SkillName.Discordance );
+						
+						double immunetest = ( (from.Skills[SkillName.Musicianship].Value / 250) + (from.Dex/350) ) /2;
+						if (immunetest > 0.50)
+							immunetest = 0.50;
+						
+						bool onesuccess = false;
+						
+						foreach ( Mobile m in from.GetMobilesInRange( range ) )
 						{
-							bool discordMe = true;
-
-							if ( targ.Skills[SkillName.MagicResist].Value > Utility.RandomMinMax( 0, 125 ) && targ.Player )
-								discordMe = false;
-
-							if ( discordMe )
+							BaseHouse house = BaseHouse.FindHouseAt( m );
+							
+							if ( m == from || !from.CanBeHarmful ( m, false ) || !(m is BaseCreature) || m.Map == null || !from.CanSee( m ) )
+								continue;
+									
+							if ( m is BaseCreature && ((BaseCreature)m).BardImmune && !(Utility.RandomDouble() < immunetest))
 							{
-								from.SendLocalizedMessage( 1049539 ); // You play the song surpressing your targets strength
-								m_Instrument.PlayInstrumentWell( from );
-								m_Instrument.ConsumeUse( from );
-
-								ArrayList mods = new ArrayList();
-								int effect;
-								double scalar;
-
-								effect = (int)( from.Skills[SkillName.Discordance].Value / -5.0 );
-
-								if ( Core.SE && BaseInstrument.GetBaseDifficulty( targ ) >= 160.0 )
-									effect /= 2;
-
-								scalar = effect * 0.01;
-
-								mods.Add( new ResistanceMod( ResistanceType.Physical, effect ) );
-								mods.Add( new ResistanceMod( ResistanceType.Fire, effect ) );
-								mods.Add( new ResistanceMod( ResistanceType.Cold, effect ) );
-								mods.Add( new ResistanceMod( ResistanceType.Poison, effect ) );
-								mods.Add( new ResistanceMod( ResistanceType.Energy, effect ) );
-
-								mods.Add( new StatMod( StatType.Str, "DiscordanceStr", (int)(targ.RawStr * scalar), TimeSpan.Zero ) );
-								mods.Add( new StatMod( StatType.Int, "DiscordanceInt", (int)(targ.RawInt * scalar), TimeSpan.Zero ) );
-								mods.Add( new StatMod( StatType.Dex, "DiscordanceDex", (int)(targ.RawDex * scalar), TimeSpan.Zero ) );
-
-								for ( int i = 0; i < targ.Skills.Length; ++i )
+								((BaseCreature)m).Combatant = from;
+								continue;
+							}
+							
+							double diff = (m_Instrument.GetDifficultyFor(m ) * 1.15) - 5.0;
+							
+							if ( diff > (from.Skills[SkillName.Musicianship].Value /3) )
+							{
+								if (from.CheckTargetSkill( SkillName.Discordance, m, diff-25.0, diff+25.0 ) )
 								{
-									if ( targ.Skills[i].Value > 0 )
-										mods.Add( new DefaultSkillMod( (SkillName)i, true, targ.Skills[i].Value * scalar ) );
+									ProcessDiscordance(from, m, false);
+									onesuccess = true;
+									//m.Say("[Added to area target list]"); debug
 								}
+								else if (Utility.RandomBool()  && ((BaseCreature)m).Combatant == null)
+									((BaseCreature)m).Combatant = from;
 
-								DiscordanceInfo info = new DiscordanceInfo( from, targ, Math.Abs( effect ), mods );
-								info.m_Timer = Timer.DelayCall<DiscordanceInfo>( TimeSpan.Zero, TimeSpan.FromSeconds( 1.25 ), new TimerStateCallback<DiscordanceInfo>( ProcessDiscordance ), info );
-
-								m_Table[targ] = info;
-
-								BuffInfo.RemoveBuff( targ, BuffIcon.Discordance );
-								string args = String.Format("{0}\t{1}\t{2}\t{3}\t{4}", effect, (int)(targ.RawStr * scalar), (int)(targ.RawInt * scalar), (int)(targ.RawDex * scalar), scalar);
-								BuffInfo.AddBuff( targ, new BuffInfo( BuffIcon.Discordance, 1063662, args.ToString() ));
 							}
-							else
+							else 
 							{
-								from.SendLocalizedMessage( 1049540 );// You fail to disrupt your target
-								m_Instrument.PlayInstrumentBadly( from );
-								m_Instrument.ConsumeUse( from );
+								ProcessDiscordance(from, m, false);
+								onesuccess = true;
+								//m.Say("[Added to area target list]");
 							}
+						}		
+						if (onesuccess)
+						{
+							m_Instrument.PlayInstrumentWell( from );
+							m_Instrument.ConsumeUse( from );
+							from.SendMessage("You put the area in discord!");
+							from.NextSkillTime = DateTime.Now + TimeSpan.FromSeconds( 10.0 );
 						}
 						else
 						{
-							from.SendLocalizedMessage( 1049540 );// You fail to disrupt your target
-							m_Instrument.PlayInstrumentBadly( from );
-							m_Instrument.ConsumeUse( from );
+							from.SendMessage("Your music cannot influence any creatures here.");
+							from.NextSkillTime = DateTime.Now + TimeSpan.FromSeconds( 5.0 );
 						}
 
-						from.NextSkillTime = DateTime.Now + TimeSpan.FromSeconds( 12.0 );
 					}
+					
 					else
 					{
 						m_Instrument.PlayInstrumentBadly( from );
@@ -260,6 +335,77 @@ namespace Server.SkillHandlers
 				{
 					from.SendLocalizedMessage( 1049535 ); // A song of discord would have no effect on that.
 				}
+			}
+
+			private void ProcessDiscordance( Mobile from, Mobile targ)
+			{
+				ProcessDiscordance(from, targ, true);
+			}
+
+			private void ProcessDiscordance( Mobile from, Mobile targ, bool msg)
+			{
+						double diff = m_Instrument.GetDifficultyFor(targ ) - 10.0;
+						
+						if (from is PlayerMobile && ((PlayerMobile)from).Troubadour() )
+							diff /= 1.25;
+						
+						double music = from.Skills[SkillName.Musicianship].Value;
+						Region reg = Region.Find( targ.Location, targ.Map );
+
+						if ( music > 100.0 )
+							diff -= (music - 100.0) * 0.5;
+
+						if ( !BaseInstrument.CheckMusicianship( from ) )
+						{
+							if (msg)
+								from.SendLocalizedMessage( 500612 ); // You play poorly, and there is no effect.
+							m_Instrument.PlayInstrumentBadly( from );
+							m_Instrument.ConsumeUse( from );
+						}
+						else if ( from.CheckTargetSkill( SkillName.Discordance, targ, diff-25.0, diff+25.0 ) )
+						{
+							if (msg)
+								from.SendLocalizedMessage( 1049539 ); // You play the song surpressing your targets strength
+							m_Instrument.PlayInstrumentWell( from );
+							m_Instrument.ConsumeUse( from );
+
+							ArrayList mods = new ArrayList();
+
+							mods.Add( new ResistanceMod( ResistanceType.Physical, Discordance.ReduceValue(from, targ, from.GetResistance(ResistanceType.Physical)) ) );
+							mods.Add( new ResistanceMod( ResistanceType.Fire, Discordance.ReduceValue(from, targ, from.GetResistance(ResistanceType.Fire)) ) );
+							mods.Add( new ResistanceMod( ResistanceType.Cold, Discordance.ReduceValue(from, targ, from.GetResistance(ResistanceType.Cold)) ) );
+							mods.Add( new ResistanceMod( ResistanceType.Poison, Discordance.ReduceValue(from, targ, from.GetResistance(ResistanceType.Poison)) ) );
+							mods.Add( new ResistanceMod( ResistanceType.Energy, Discordance.ReduceValue(from, targ, from.GetResistance(ResistanceType.Energy)) ) );
+
+							mods.Add( new StatMod( StatType.Str, "DiscordanceStr", Discordance.ReduceValue(from, targ, targ.RawStr), TimeSpan.Zero ) );
+							mods.Add( new StatMod( StatType.Int, "DiscordanceInt", Discordance.ReduceValue(from, targ, targ.RawInt), TimeSpan.Zero ) );
+							mods.Add( new StatMod( StatType.Dex, "DiscordanceDex", Discordance.ReduceValue(from, targ, targ.RawDex), TimeSpan.Zero ) );
+
+							for ( int i = 0; i < targ.Skills.Length; ++i )
+							{
+								if ( targ.Skills[i].Value > 0 )
+									mods.Add( new DefaultSkillMod( (SkillName)i, true, targ.Skills[i].Value *  Discordance.Scalar(Discordance.Effect(from, targ)) ) );
+							}
+							DiscordanceInfo info = new DiscordanceInfo( from, targ, Math.Abs(  Discordance.Effect(from, targ) ), mods );
+							info.m_Timer = Timer.DelayCall<DiscordanceInfo>( TimeSpan.Zero, TimeSpan.FromSeconds( 1.25 ), new TimerStateCallback<DiscordanceInfo>( Server.SkillHandlers.Discordance.ProcessDiscordance ), info );
+
+						}
+						else
+						{
+							if (msg)
+								from.SendLocalizedMessage( 1049540 );// You fail to disrupt your target
+							m_Instrument.PlayInstrumentBadly( from );
+							m_Instrument.ConsumeUse( from );
+						}
+
+								if (from is PlayerMobile && ((PlayerMobile)from).Troubadour())
+									from.NextSkillTime = DateTime.Now + TimeSpan.FromSeconds( 5.0 );
+								else 
+									from.NextSkillTime = DateTime.Now + TimeSpan.FromSeconds( 10.0 );
+			
+			
+			
+			
 			}
 		}
 	}

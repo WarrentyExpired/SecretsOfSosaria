@@ -45,6 +45,9 @@ namespace Server.Spells.Eighth
 			if ( CheckSequence() )
 			{	
 				TimeSpan duration = TimeSpan.FromSeconds( ( Spell.ItemSkillValue( Caster, SkillName.Magery, false ) + Spell.ItemSkillValue( Caster, SkillName.Psychology, false ) ) * 9 );
+                                double checkvalue = 120;
+				if (Caster is PlayerMobile && ((PlayerMobile)Caster).Sorcerer() )
+					checkvalue = 90;
 
 				if ( Caster.CheckTargetSkill( SkillName.Psychology, Caster, 0.0, 125.0 ) )
 				{

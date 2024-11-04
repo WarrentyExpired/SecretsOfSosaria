@@ -44,6 +44,11 @@ namespace Server
 			return Damage( m, from, damage, false, phys, fire, cold, pois, nrgy, 0, 0, false, false, false );
 		}
 
+		public static int Damage( bool potion, Mobile m, Mobile from, int damage, int phys, int fire, int cold, int pois, int nrgy ) //added for potion based damage
+		{
+			return Damage( m, from, damage, false, phys, fire, cold, pois, nrgy, 0, 0, false, false, false, false, false, potion );
+		}
+
 		public static int Damage( Mobile m, Mobile from, int damage, bool ignoreArmor, int phys, int fire, int cold, int pois, int nrgy )
 		{
 			return Damage( m, from, damage, ignoreArmor, phys, fire, cold, pois, nrgy, 0, 0, false, false, false );
@@ -56,6 +61,23 @@ namespace Server
 
 		public static int Damage( Mobile m, Mobile from, int damage, bool ignoreArmor, int phys, int fire, int cold, int pois, int nrgy, int chaos, int direct, bool keepAlive, bool archer, bool deathStrike )
 		{
+			return Damage(m, from, damage, ignoreArmor, phys, fire, cold, pois, nrgy, chaos, direct, keepAlive, archer, deathStrike, false);
+		}
+		
+		public static int Damage( Mobile m, Mobile from, int damage, bool ignoreArmor, int phys, int fire, int cold, int pois, int nrgy, int chaos, int direct, bool keepAlive, bool archer, bool deathStrike, bool magic )
+		{
+			return Damage(m, from, damage, ignoreArmor, phys, fire, cold, pois, nrgy, chaos, direct, keepAlive, archer, deathStrike, magic, false, false); //added nuking (provoke on self for a mob), added potions
+		}
+
+		public static int Damage( Mobile m, Mobile from, int damage, bool ignoreArmor, int phys, int fire, int cold, int pois, int nrgy, int chaos, int direct, bool keepAlive, bool archer, bool deathStrike, bool magic, bool nuking )
+		{
+			return Damage(m, from, damage, ignoreArmor, phys, fire, cold, pois, nrgy, chaos, direct, keepAlive, archer, deathStrike, magic, nuking, false); //added nuking (provoke on self for a mob), added potions
+		}
+
+		public static int Damage( Mobile m, Mobile from, int damage, bool ignoreArmor, int phys, int fire, int cold, int pois, int nrgy, int chaos, int direct, bool keepAlive, bool archer, bool deathStrike, bool magic, bool nuking, bool potions )
+		{
+
+
 			if( m == null || m.Deleted || !m.Alive || damage <= 0 )
 				return 0;
 
@@ -91,6 +113,38 @@ namespace Server
 				quiver = from.FindItemOnLayer( Layer.Cloak ) as BaseQuiver;
 
 			int totalDamage;
+
+			if (!magic && !nuking && from is PlayerMobile && ((PlayerMobile)from).Troubadour() && SkillHandlers.Discordance.IsDiscorded(m) )
+			{	
+				totalDamage = (int)((double)damage * (1+ (from.Skills[SkillName.FistFighting].Value / 120) + (from.Dex / 300) ) );
+			}
+			else if (magic && from is PlayerMobile && ((PlayerMobile)from).Sorcerer() && Spells.Fourth.CurseSpell.UnderEffect( m ) )
+			{
+				
+				int resPhys = m.PhysicalResistance;
+				int resFire = m.FireResistance;
+				int resCold = m.ColdResistance;
+				int resPois = m.PoisonResistance;
+				int resNrgy = m.EnergyResistance;
+
+				totalDamage  = (damage * phys * (100 - resPhys))/2;
+				totalDamage += (damage * fire * (100 - resFire))/2;
+				totalDamage += (damage * cold * (100 - resCold))/2;
+				totalDamage += (damage * pois * (100 - resPois))/2;
+				totalDamage += (damage * nrgy * (100 - resNrgy))/2;
+				
+				totalDamage /= 10000;
+				
+				totalDamage += (phys + fire + cold + pois + nrgy) /2;
+
+				totalDamage += damage * direct / 100;
+
+				if( totalDamage < 1 )
+					totalDamage = 1;
+				
+				totalDamage = damage;
+			}
+
 
 			if( !ignoreArmor )
 			{

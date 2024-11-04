@@ -62,6 +62,9 @@ namespace Server.Spells.Fourth
 				toHeal += Utility.Random( 1, 10 );
 				toHeal = MyServerSettings.PlayerLevelMod( toHeal, Caster );
 
+				if (Caster is PlayerMobile && ((PlayerMobile)Caster).Sorcerer())
+					toHeal = (int)((double)toHeal * 1.25);
+
 				//m.Heal( toHeal, Caster );
 				SpellHelper.Heal( toHeal, m, Caster );
 

@@ -135,6 +135,14 @@ namespace Server.Misc
 
 				double totalPoints = focusPoints + medPoints + (from.Meditating ? (medPoints > 13.0 ? 13.0 : medPoints) : 0.0);
 
+				if (from is PlayerMobile && ((PlayerMobile)from).Sorcerer())
+					totalPoints = focusPoints + (medPoints*1.5) + (from.Meditating ? (medPoints > 17.0 ? 17.0 : medPoints) : 0.0);
+				else
+					totalPoints = focusPoints + medPoints + (from.Meditating ? (medPoints > 13.0 ? 13.0 : medPoints) : 0.0);
+
+				if (from is PlayerMobile && ((PlayerMobile)from).Sorcerer())
+					totalPoints += (2 * ( ( (from.Skills[SkillName.Meditation].Value/125) + (from.Int / 500) / 2 )));
+
 				if( (from is BaseCreature && ((BaseCreature)from).IsParagon) || from is Leviathan )
 					totalPoints += 40;
 

@@ -15,7 +15,17 @@ namespace Server.SkillHandlers
 
 		public static TimeSpan OnUse( Mobile m )
 		{
-			m.RevealingAction();
+			if (m is PlayerMobile && ((PlayerMobile)m).Troubadour() )
+			{
+				double odds = (m.Skills[SkillName.Musicianship].Value + m.Skills[SkillName.Stealth].Value / 500) + (m.Dex/350);
+				if (odds > 0.90)
+					odds = 0.90;
+				
+				if (Utility.RandomDouble() > odds)
+					m.RevealingAction();
+			}
+			else
+				m.RevealingAction();
 
 			BaseInstrument.PickInstrument( m, new InstrumentPickedCallback( OnPickedInstrument ) );
 
@@ -24,10 +34,25 @@ namespace Server.SkillHandlers
 
 		public static void OnPickedInstrument( Mobile from, BaseInstrument instrument )
 		{
-			from.RevealingAction();
+			if (from is PlayerMobile && ((PlayerMobile)from).Troubadour() )
+			{
+				double odds = (from.Skills[SkillName.Musicianship].Value + from.Skills[SkillName.Stealth].Value / 500) + (from.Dex/350);
+				if (odds > 0.90)
+					odds = 0.90;
+				
+				if (Utility.RandomDouble() > odds)
+					from.RevealingAction();
+			}
+			else
+				from.RevealingAction();
+			//from.SendLocalizedMessage( 1049525 ); // Whom do you wish to calm?
 			from.SendMessage( "Choose someone to calm or choose yourself to calm everyone in the nearby area." );
 			from.Target = new InternalTarget( from, instrument );
-			from.NextSkillTime = DateTime.Now + TimeSpan.FromHours( 6.0 );
+			
+			if (from is PlayerMobile && ((PlayerMobile)from).Troubadour() )
+				from.NextSkillTime = DateTime.Now + TimeSpan.FromHours( 4.0 );
+			else
+				from.NextSkillTime = DateTime.Now + TimeSpan.FromHours( 6.0 );
 		}
 
 		private class InternalTarget : Target
@@ -48,7 +73,17 @@ namespace Server.SkillHandlers
 
 			protected override void OnTarget( Mobile from, object targeted )
 			{
-				from.RevealingAction();
+				if (from is PlayerMobile && ((PlayerMobile)from).Troubadour() )
+				{
+					double odds = (from.Skills[SkillName.Musicianship].Value + from.Skills[SkillName.Stealth].Value / 500) + (from.Dex/350);
+					if (odds > 0.90)
+						odds = 0.90;
+
+					if (Utility.RandomDouble() > odds)
+						from.RevealingAction();
+				}
+				else
+					from.RevealingAction();
 
 				if ( !(targeted is Mobile) )
 				{
@@ -61,10 +96,22 @@ namespace Server.SkillHandlers
 				else if ( targeted is Mobile )
 				{
 					m_SetSkillTime = false;
-					from.NextSkillTime = DateTime.Now + TimeSpan.FromSeconds( 10.0 );
+					if (from is PlayerMobile && ((PlayerMobile)from).Troubadour() )
+						from.NextSkillTime = DateTime.Now + TimeSpan.FromSeconds( 6.0 ); 
+					else
+						from.NextSkillTime = DateTime.Now + TimeSpan.FromSeconds( 10.0 );
+					
+					double immunetest = ( (from.Skills[SkillName.Musicianship].Value / 250) + (from.Dex/350) ) /2;
+					if (immunetest > 0.50)
+						immunetest = 0.50;
 
 					if ( targeted == from )
 					{
+						double testvalue = 120;
+						
+						if (from is PlayerMobile && ((PlayerMobile)from).Troubadour() )
+							testvalue = 90;
+						
 						// Standard mode : reset combatants for everyone in the area
 
 						if ( !BaseInstrument.CheckMusicianship( from ) )
@@ -73,7 +120,7 @@ namespace Server.SkillHandlers
 							m_Instrument.PlayInstrumentBadly( from );
 							m_Instrument.ConsumeUse( from );
 						}
-						else if ( !from.CheckSkill( SkillName.Peacemaking, 0.0, 120.0 ) )
+						else if ( !from.CheckSkill( SkillName.Peacemaking, 0.0, testvalue ) )
 						{
 							from.SendLocalizedMessage( 500613 ); // You attempt to calm everyone, but fail.
 							m_Instrument.PlayInstrumentBadly( from );
@@ -81,11 +128,21 @@ namespace Server.SkillHandlers
 						}
 						else
 						{
-							from.NextSkillTime = DateTime.Now + TimeSpan.FromSeconds( 5.0 );
+							
+							Region reg = Region.Find( from.Location, from.Map );
+							
+							if (from is PlayerMobile && ((PlayerMobile)from).Troubadour() )
+								from.NextSkillTime = DateTime.Now + TimeSpan.FromSeconds( 3.0 );
+							else
+								from.NextSkillTime = DateTime.Now + TimeSpan.FromSeconds( 5.0 );
+							
 							m_Instrument.PlayInstrumentWell( from );
 							m_Instrument.ConsumeUse( from );
 
 							double seconds = ( from.Skills[SkillName.Musicianship].Value ) / 10;
+							
+							if (from is PlayerMobile && ((PlayerMobile)from).Troubadour() )
+								seconds += 8 * (from.Dex / 500);
 
 							Map map = from.Map;
 
@@ -94,50 +151,34 @@ namespace Server.SkillHandlers
 								int range = BaseInstrument.GetBardRange( from, SkillName.Peacemaking );
 
 								bool calmed = false;
-								bool failed = false;
 
 								foreach ( Mobile m in from.GetMobilesInRange( range ) )
 								{
-									if ( !Server.Spells.Spell.isFriendly( from, m ) && !failed )
-									{
-										bool notPacified = false;
+									if ( m == from || !from.CanBeHarmful ( m, false ))
+										continue;
+									
+									if (((m is BaseCreature && ((BaseCreature)m).Uncalmable) || (m is BaseCreature && ((BaseCreature)m).AreaPeaceImmune)) && !(from is PlayerMobile && ((PlayerMobile)from).Troubadour()))
+										continue;
+								
+									
+									
+									if (((m is BaseCreature && ((BaseCreature)m).Uncalmable) || (m is BaseCreature && ((BaseCreature)m).AreaPeaceImmune)) && from is PlayerMobile && ((PlayerMobile)from).Troubadour() && !(Utility.RandomDouble() < immunetest) )
+										continue;
+										
+									calmed = true;
 
-										double diff = m_Instrument.GetDifficultyFor( m ) - 10.0;
-										double music = from.Skills[SkillName.Musicianship].Value;
+									m.SendLocalizedMessage( 500616 ); // You hear lovely music, and forget to continue battling!
+									m.Combatant = null;
+									m.Warmode = false;
 
-										if ( music > 100.0 )
-											diff -= (music - 100.0) * 0.5;
-
-										if ( !from.CheckTargetSkill( SkillName.Peacemaking, m, diff - 25.0, diff + 25.0 ) )
-										{
-											notPacified = true;
-
-											if ( Utility.RandomBool() )
-											{
-												failed = true;
-												from.SendMessage( "Your attempt to calm " + m.Name + " failed, causing your song to cease." );
-											}
-											else
-												from.SendMessage( "You attempt to calm " + m.Name + ", but fail." );
-										}
-
-										if ((m is BaseCreature && ((BaseCreature)m).Uncalmable) || notPacified || (m is BaseCreature && ((BaseCreature)m).AreaPeaceImmune) || m == from || !from.CanBeHarmful ( m, false ))
-											continue;
-
-										calmed = true;
-										from.SendMessage( "You play hypnotic music, calming " + m.Name + "." );
-
-										m.SendLocalizedMessage( 500616 ); // You hear lovely music, and forget to continue battling!
-										m.Combatant = null;
-										m.Warmode = false;
-
-										if ( m is BaseCreature && !((BaseCreature)m).BardPacified )
-											((BaseCreature)m).Pacify( from, DateTime.Now + TimeSpan.FromSeconds( seconds ) );
-									}
+									if ( m is BaseCreature && !((BaseCreature)m).BardPacified )
+										((BaseCreature)m).Pacify( from, DateTime.UtcNow + TimeSpan.FromSeconds( seconds ) );
 								}
 
 								if ( !calmed )
 									from.SendLocalizedMessage( 1049648 ); // You play hypnotic music, but there is nothing in range for you to calm.
+								else
+									from.SendLocalizedMessage( 500615 ); // You play your hypnotic music, stopping the battle.
 							}
 						}
 					}
@@ -152,9 +193,14 @@ namespace Server.SkillHandlers
 							from.SendLocalizedMessage( 1049528 );
 							m_SetSkillTime = true;
 						}
-						else if ( targ is BaseCreature && ((BaseCreature)targ).Uncalmable )
+						else if ( targ is BaseCreature && ((BaseCreature)targ).Uncalmable && !(from is PlayerMobile && ((PlayerMobile)from).Troubadour()) )
 						{
 							from.SendLocalizedMessage( 1049526 ); // You have no chance of calming that creature.
+							m_SetSkillTime = true;
+						}
+						else if ( targ is BaseCreature && ((BaseCreature)targ).Uncalmable && (from is PlayerMobile && ((PlayerMobile)from).Troubadour()) && !(Utility.RandomDouble() < immunetest) )
+						{
+							from.SendMessage("You fail to influence this creature's mind.");
 							m_SetSkillTime = true;
 						}
 						else if ( targ is BaseCreature && ((BaseCreature)targ).BardPacified )
@@ -165,24 +211,25 @@ namespace Server.SkillHandlers
 						else if ( !BaseInstrument.CheckMusicianship( from ) )
 						{
 							from.SendLocalizedMessage( 500612 ); // You play poorly, and there is no effect.
-							from.NextSkillTime = DateTime.Now + TimeSpan.FromSeconds( 5.0 );
+							Region reg = Region.Find( from.Location, from.Map );
+							if (from is PlayerMobile && ((PlayerMobile)from).Troubadour() )
+								from.NextSkillTime = DateTime.Now + TimeSpan.FromSeconds( 3.0 );
+							else
+								from.NextSkillTime = DateTime.Now + TimeSpan.FromSeconds( 5.0 );
 							m_Instrument.PlayInstrumentBadly( from );
 							m_Instrument.ConsumeUse( from );
 						}
 						else
 						{
-							double diff = m_Instrument.GetDifficultyFor( targ ) - 10.0;
+							double diff = m_Instrument.GetDifficultyFor(targ ) - 10.0;
+							
+							if (from is PlayerMobile && ((PlayerMobile)from).Troubadour() && diff > 30)
+								diff /= 1.25;
+								
 							double music = from.Skills[SkillName.Musicianship].Value;
 
 							if ( music > 100.0 )
 								diff -= (music - 100.0) * 0.5;
-
-							double seconds = 100 - (diff / 1.5);
-
-							if ( seconds > 120 )
-								seconds = 120;
-							else if ( seconds < 10 )
-								seconds = 10;
 
 							if ( !from.CheckTargetSkill( SkillName.Peacemaking, targ, diff - 25.0, diff + 25.0 ) )
 							{
@@ -195,7 +242,12 @@ namespace Server.SkillHandlers
 								m_Instrument.PlayInstrumentWell( from );
 								m_Instrument.ConsumeUse( from );
 
-								from.NextSkillTime = DateTime.Now + TimeSpan.FromSeconds( 5.0 );
+								Region reg = Region.Find( from.Location, from.Map );
+								if (from is PlayerMobile && ((PlayerMobile)from).Troubadour() )
+									from.NextSkillTime = DateTime.Now + TimeSpan.FromSeconds( 3.0 );
+								else
+									from.NextSkillTime = DateTime.Now + TimeSpan.FromSeconds( 5.0 );
+
 								if ( targ is BaseCreature )
 								{
 									BaseCreature bc = (BaseCreature)targ;
@@ -205,25 +257,22 @@ namespace Server.SkillHandlers
 									targ.Combatant = null;
 									targ.Warmode = false;
 
-									bc.Pacify( from, DateTime.Now + TimeSpan.FromSeconds( seconds ) );
+									double seconds = 100 - (diff / 1.5);
+
+									if ( seconds > 120 )
+										seconds = 120;
+									else if ( seconds < 10 )
+										seconds = 10;
+
+									bc.Pacify( from, DateTime.UtcNow + TimeSpan.FromSeconds( seconds ) );
 								}
-								else if ( targ.Skills[SkillName.MagicResist].Value > Utility.RandomMinMax( 0, 125 ) )
+								else
 								{
 									from.SendLocalizedMessage( 1049532 ); // You play hypnotic music, calming your target.
 
 									targ.SendLocalizedMessage( 500616 ); // You hear lovely music, and forget to continue battling!
 									targ.Combatant = null;
 									targ.Warmode = false;
-
-									targ.Paralyze( TimeSpan.FromSeconds( seconds ) );
-									BuffInfo.RemoveBuff( targ, BuffIcon.PeaceMaking );
-									BuffInfo.AddBuff( targ, new BuffInfo( BuffIcon.PeaceMaking, 1063664, TimeSpan.FromSeconds( seconds ), targ ) );
-								}
-								else
-								{
-									from.SendLocalizedMessage( 1049531 ); // You attempt to calm your target, but fail.
-									m_Instrument.PlayInstrumentBadly( from );
-									m_Instrument.ConsumeUse( from );
 								}
 							}
 						}

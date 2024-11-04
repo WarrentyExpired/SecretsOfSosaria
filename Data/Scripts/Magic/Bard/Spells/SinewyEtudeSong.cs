@@ -48,20 +48,37 @@ namespace Server.Spells.Song
 				{
 					Mobile m = (Mobile)targets[i];
 					
-                    int amount = MyServerSettings.PlayerLevelMod( (int)(MusicSkill( Caster ) / 16), Caster );
 					string str = "str";
+                                        if (Caster is PlayerMobile && ((PlayerMobile)Caster).Troubadour())
+					{
+			                        int amount = MyServerSettings.PlayerLevelMod( (int)(MusicSkill( Caster ) / 10), Caster );
+						double duration = (double)(MusicSkill( Caster ) * 3);
 						
-					double duration = (double)(MusicSkill( Caster ) * 2);
+						StatMod mod = new StatMod( StatType.Str, str, + amount, TimeSpan.FromSeconds( duration ) );
 						
-					StatMod mod = new StatMod( StatType.Str, str, + amount, TimeSpan.FromSeconds( duration ) );
+						m.AddStatMod( mod );
 						
-					m.AddStatMod( mod );
-						
-					m.FixedParticles( 0x375A, 10, 15, 5017, 0x224, 3, EffectLayer.Waist );
+						m.FixedParticles( 0x375A, 10, 15, 5017, 0x224, 3, EffectLayer.Waist );
 
-					string args = String.Format("{0}", amount);
-					BuffInfo.RemoveBuff( m, BuffIcon.SinewyEtude );
-					BuffInfo.AddBuff( m, new BuffInfo( BuffIcon.SinewyEtude, 1063587, 1063588, TimeSpan.FromSeconds( duration ), m, args.ToString(), true));
+						string args = String.Format("{0}", amount);
+						BuffInfo.RemoveBuff( m, BuffIcon.SinewyEtude );
+						BuffInfo.AddBuff( m, new BuffInfo( BuffIcon.SinewyEtude, 1063587, 1063588, TimeSpan.FromSeconds( duration ), m, args.ToString(), true));
+					}
+					else
+					{
+                                                int amount = MyServerSettings.PlayerLevelMod( (int)(MusicSkill( Caster ) / 16), Caster );
+                                                double duration = (double)(MusicSkill( Caster ) * 2);
+
+                                                StatMod mod = new StatMod( StatType.Str, str, + amount, TimeSpan.FromSeconds( duration ) );
+
+                                                m.AddStatMod( mod );
+
+                                                m.FixedParticles( 0x375A, 10, 15, 5017, 0x224, 3, EffectLayer.Waist );
+
+                                                string args = String.Format("{0}", amount);
+                                                BuffInfo.RemoveBuff( m, BuffIcon.SinewyEtude );
+                                                BuffInfo.AddBuff( m, new BuffInfo( BuffIcon.SinewyEtude, 1063587, 1063588, TimeSpan.FromSeconds( duration ), m, args.ToString(), true));
+					}	
 				}
 			}
 

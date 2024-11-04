@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using Server.Targeting;
 using Server.Network;
+using Server.Mobiles;
 
 namespace Server.Spells.First
 {
@@ -63,14 +64,29 @@ namespace Server.Spells.First
 				{
 					targ.PlaySound( 0x1E9 );
 					targ.FixedParticles( 0x376A, 9, 32, 5008, Server.Misc.PlayerSettings.GetMySpellHue( true, Caster, 0 ), 0, EffectLayer.Waist );
-
+                    int physicalChange = 0;
+                    int elementalChange = 0;
+                    if (Caster is PlayerMobile && ((PlayerMobile)Caster).Sorcerer())
+						{
+							// Max bonus * how close to max Magery+Eval
+							double affinitybonus = 120 * ((Caster.Skills[SkillName.Magery].Value + Caster.Skills[SkillName.Psychology].Value)/480);
+							
+							physicalChange = (int)affinitybonus;
+							elementalChange = (int)affinitybonus;
+						}
+						else
+						{
+							physicalChange = 20;
+							elementalChange = -5;
+						}
+					physicalChange += (int)(targ.Skills[SkillName.Inscribe].Value / 20);
 					mods = new ResistanceMod[5]
 						{
-							new ResistanceMod( ResistanceType.Physical, 15 + (int)(targ.Skills[SkillName.Inscribe].Value / 20) ),
-							new ResistanceMod( ResistanceType.Fire, -5 ),
-							new ResistanceMod( ResistanceType.Cold, -5 ),
-							new ResistanceMod( ResistanceType.Poison, -5 ),
-							new ResistanceMod( ResistanceType.Energy, -5 )
+							new ResistanceMod( ResistanceType.Physical, physicalChange ),
+							new ResistanceMod( ResistanceType.Fire, elementalChange ),
+							new ResistanceMod( ResistanceType.Cold, elementalChange ),
+							new ResistanceMod( ResistanceType.Poison, elementalChange ),
+							new ResistanceMod( ResistanceType.Energy, elementalChange )
 						};
 
 					m_Table[targ] = mods;

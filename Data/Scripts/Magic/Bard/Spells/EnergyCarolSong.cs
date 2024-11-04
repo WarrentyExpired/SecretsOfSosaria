@@ -47,25 +47,48 @@ namespace Server.Spells.Song
 				for ( int i = 0; i < targets.Count; ++i )
 				{
 					Mobile m = (Mobile)targets[i];
-					
-					TimeSpan duration = TimeSpan.FromSeconds( (double)(MusicSkill( Caster ) * 2) );
-                    int amount = MyServerSettings.PlayerLevelMod( (int)(MusicSkill( Caster ) / 16), Caster );
+					if (Caster is PlayerMobile && ((PlayerMobile)Caster).Troubadour())
+					{
+	                                        TimeSpan duration = TimeSpan.FromSeconds( (double)(MusicSkill( Caster ) * 3) );
+	                                        int amount = MyServerSettings.PlayerLevelMod( (int)(MusicSkill( Caster ) / 10), Caster );
 
-					if ( ( amount + m.EnergyResistance ) > MySettings.S_MaxResistance )
-						amount = MySettings.S_MaxResistance - m.EnergyResistance;
-						
-					m.SendMessage( "Your resistance to energy has increased." );
-					ResistanceMod mod1 = new ResistanceMod( ResistanceType.Energy, + amount );
-						
-					m.FixedParticles( 0x373A, 10, 15, 5012, 0x14, 3, EffectLayer.Waist );
-						
-					m.AddResistanceMod( mod1 );
-						
-					new ExpireTimer( m, mod1, duration ).Start();
+	                                        if ( ( amount + m.EnergyResistance ) > MySettings.S_MaxResistance )
+                                                amount = MySettings.S_MaxResistance - m.EnergyResistance;
 
-					string args = String.Format("{0}", amount);
-					BuffInfo.RemoveBuff( m, BuffIcon.EnergyCarol );
-					BuffInfo.AddBuff( m, new BuffInfo( BuffIcon.EnergyCarol, 1063565, 1063566, duration, m, args.ToString(), true));
+	                                        m.SendMessage( "Your resistance to energy has increased." );
+	                                        ResistanceMod mod1 = new ResistanceMod( ResistanceType.Energy, + amount );
+
+	                                        m.FixedParticles( 0x373A, 10, 15, 5012, 0x14, 3, EffectLayer.Waist );
+
+	                                        m.AddResistanceMod( mod1 );
+
+	                                        new ExpireTimer( m, mod1, duration ).Start();
+
+	                                        string args = String.Format("{0}", amount);
+	                                        BuffInfo.RemoveBuff( m, BuffIcon.EnergyCarol );
+	                                        BuffInfo.AddBuff( m, new BuffInfo( BuffIcon.EnergyCarol, 1063565, 1063566, duration, m, args.ToString(), true));
+					}
+					else
+					{
+						TimeSpan duration = TimeSpan.FromSeconds( (double)(MusicSkill( Caster ) * 2) );
+			                        int amount = MyServerSettings.PlayerLevelMod( (int)(MusicSkill( Caster ) / 16), Caster );
+
+						if ( ( amount + m.EnergyResistance ) > MySettings.S_MaxResistance )
+							amount = MySettings.S_MaxResistance - m.EnergyResistance;
+						
+						m.SendMessage( "Your resistance to energy has increased." );
+						ResistanceMod mod1 = new ResistanceMod( ResistanceType.Energy, + amount );
+						
+						m.FixedParticles( 0x373A, 10, 15, 5012, 0x14, 3, EffectLayer.Waist );
+						
+						m.AddResistanceMod( mod1 );
+						
+						new ExpireTimer( m, mod1, duration ).Start();
+
+						string args = String.Format("{0}", amount);
+						BuffInfo.RemoveBuff( m, BuffIcon.EnergyCarol );
+						BuffInfo.AddBuff( m, new BuffInfo( BuffIcon.EnergyCarol, 1063565, 1063566, duration, m, args.ToString(), true));
+					}
 				}
 			}
 

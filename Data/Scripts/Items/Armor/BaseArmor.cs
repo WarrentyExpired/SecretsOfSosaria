@@ -1487,6 +1487,10 @@ namespace Server.Items
 
 			if ( m_HitPoints >= 0 && m_MaxHitPoints > 0 )
 				list.Add( 1060639, "{0}\t{1}", m_HitPoints, m_MaxHitPoints ); // durability ~1_val~ / ~2_val~
+
+                        if (this is IClothingStub) list.Add("this item is considered clothing");
+                        else list.Add("this item is considered armor");
+
 		}
 
 		public override void OnSingleClick( Mobile from )

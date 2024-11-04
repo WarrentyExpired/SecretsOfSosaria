@@ -2,6 +2,8 @@ using System;
 using Server.Targeting;
 using Server.Network;
 using Server.Misc;
+using Server.Mobiles;
+using Server.Spells.Fourth;
 
 namespace Server.Spells.Third
 {
@@ -28,30 +30,94 @@ namespace Server.Spells.Third
 
 		public void Target( Mobile m )
 		{
-			if ( !Caster.CanSee( m ) )
+			if (Caster is PlayerMobile && ((PlayerMobile)Caster).Sorcerer())
 			{
-				Caster.SendLocalizedMessage( 500237 ); // Target can not be seen.
+				if ( !Caster.CanSee( m ) )
+				{
+					Caster.SendLocalizedMessage( 500237 ); // Target can not be seen.
+				}
+				else if ( CheckBSequence( m ) )
+				{
+					SpellHelper.Turn( Caster, m );
+
+					if (m is PlayerMobile && CurseSpell.UnderEffect( m ))
+					{
+						if (Utility.RandomBool())
+						{
+							CurseSpell.RemoveEffect(m);
+							BuffInfo.RemoveBuff(m, BuffIcon.Curse);
+							m.SendMessage("You are no longer cursed!");
+							m.UpdateResistances();
+						}
+						else
+							m.SendMessage("You try to remove your curse, but fail!");
+					}
+					
+					else 
+					{
+					/////Add Sorcerer Stuff Here
+                                        int percentage = (int)(SpellHelper.GetOffsetScalar(Caster, m, false) * 100);
+                                        percentage = (int)((double)percentage * (1+ ((Caster.Skills[SkillName.Magery].Value + Caster.Skills[SkillName.Psychology].Value)/180)));
+                                        TimeSpan length = SpellHelper.GetDuration(Caster, m);
+					length += TimeSpan.FromSeconds(10);
+					double timer = (int)((double)percentage * (1+ ((Caster.Skills[SkillName.Magery].Value + Caster.Skills[SkillName.Psychology].Value)/180)));
+
+                                        SpellHelper.AddStatBonus( Caster, m, StatType.Str, percentage, TimeSpan.FromSeconds(timer) ); SpellHelper.DisableSkillCheck = true;
+                                        SpellHelper.AddStatBonus( Caster, m, StatType.Dex, percentage, TimeSpan.FromSeconds(timer) );
+                                        SpellHelper.AddStatBonus( Caster, m, StatType.Int, percentage, TimeSpan.FromSeconds(timer) ); SpellHelper.DisableSkillCheck = false;
+
+                                        m.FixedParticles( 0x373A, 10, 15, 5018, PlayerSettings.GetMySpellHue( true, Caster, 0 ), 0, EffectLayer.Waist );
+                                        m.PlaySound( 0x1EA );
+
+                                        string args = String.Format("{0}\t{1}\t{2}", percentage, percentage, percentage);
+                                        BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.Bless, 1075847, 1075848, length, m, args.ToString()));
+					}
+				}
+
+				FinishSequence();
 			}
-			else if ( CheckBSequence( m ) )
+			else
 			{
-				SpellHelper.Turn( Caster, m );
+				if ( !Caster.CanSee( m ) )
+				{
+					Caster.SendLocalizedMessage( 500237 ); // Target can not be seen.
+				}
+				else if ( CheckBSequence( m ) )
+				{
+					SpellHelper.Turn( Caster, m );
 
-				SpellHelper.AddStatBonus( Caster, m, StatType.Str ); SpellHelper.DisableSkillCheck = true;
-				SpellHelper.AddStatBonus( Caster, m, StatType.Dex );
-				SpellHelper.AddStatBonus( Caster, m, StatType.Int ); SpellHelper.DisableSkillCheck = false;
+					if (m is PlayerMobile && CurseSpell.UnderEffect( m ))
+					{
+						if (Utility.RandomBool())
+						{
+							CurseSpell.RemoveEffect(m);
+							BuffInfo.RemoveBuff(m, BuffIcon.Curse);
+							m.SendMessage("You are no longer cursed!");
+							m.UpdateResistances();
+						}
+						else
+							m.SendMessage("You try to remove your curse, but fail!");
+					}
+					
+					else 
+					{
 
-				m.FixedParticles( 0x373A, 10, 15, 5018, PlayerSettings.GetMySpellHue( true, Caster, 0 ), 0, EffectLayer.Waist );
-				m.PlaySound( 0x1EA );
+					SpellHelper.AddStatBonus( Caster, m, StatType.Str ); SpellHelper.DisableSkillCheck = true;
+					SpellHelper.AddStatBonus( Caster, m, StatType.Dex );
+					SpellHelper.AddStatBonus( Caster, m, StatType.Int ); SpellHelper.DisableSkillCheck = false;
 
-				int percentage = (int)(SpellHelper.GetOffsetScalar(Caster, m, false) * 100);
-				TimeSpan length = SpellHelper.GetDuration(Caster, m);
+					m.FixedParticles( 0x373A, 10, 15, 5018, PlayerSettings.GetMySpellHue( true, Caster, 0 ), 0, EffectLayer.Waist );
+					m.PlaySound( 0x1EA );
 
-				string args = String.Format("{0}\t{1}\t{2}", percentage, percentage, percentage);
+					int percentage = (int)(SpellHelper.GetOffsetScalar(Caster, m, false) * 100);
+					TimeSpan length = SpellHelper.GetDuration(Caster, m);
+					string args = String.Format("{0}\t{1}\t{2}", percentage, percentage, percentage);
+					BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.Bless, 1075847, 1075848, length, m, args.ToString()));
+					}
+				}
 
-				BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.Bless, 1075847, 1075848, length, m, args.ToString()));
+				FinishSequence();
 			}
-
-			FinishSequence();
 		}
 
 		private class InternalTarget : Target

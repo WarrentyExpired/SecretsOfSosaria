@@ -65,28 +65,56 @@ namespace Server.Spells.Song
 				bool IsSlayer = false;
 				if ( m is BaseCreature ){ IsSlayer = CheckSlayer( m_Book.Instrument, m ); }
 
-                int amount = (int)(MusicSkill( Caster ) / 16);
-				TimeSpan duration = TimeSpan.FromSeconds( (double)(MusicSkill( Caster )) );
-
-				if ( IsSlayer == true )
+				if (Caster is PlayerMobile && ((PlayerMobile)Caster).Troubadour())
 				{
-					amount = amount * 2;
-					duration = TimeSpan.FromSeconds( (double)(MusicSkill( Caster ) * 2) );
+	                                int amount = (int)(MusicSkill( Caster ) / 10);
+	                                TimeSpan duration = TimeSpan.FromSeconds( (double)(MusicSkill( Caster ) * 3) );
+
+	                                if ( IsSlayer == true )
+	                                {
+	                                        amount = amount * 2;
+	                                        duration = TimeSpan.FromSeconds( (double)(MusicSkill( Caster ) * 2) );
+	                                }
+
+	                                m.SendMessage( "Your resistance to fire has decreased." );
+	                                ResistanceMod mod1 = new ResistanceMod( ResistanceType.Fire, - amount );
+
+	                                m.FixedParticles( 0x374A, 10, 30, 5013, 0x489, 2, EffectLayer.Waist );
+
+	                                m.AddResistanceMod( mod1 );
+
+	                                ExpireTimer timer1 = new ExpireTimer( m, mod1, duration );
+	                                timer1.Start();
+
+	                                string args = String.Format("{0}", amount);
+	                                BuffInfo.RemoveBuff( m, BuffIcon.FireThrenody );
+	                                BuffInfo.AddBuff( m, new BuffInfo( BuffIcon.FireThrenody, 1063571, 1063572, duration, m, args.ToString(), true));
 				}
+				else
+				{
+			                int amount = (int)(MusicSkill( Caster ) / 16);
+					TimeSpan duration = TimeSpan.FromSeconds( (double)(MusicSkill( Caster )) );
 
-				m.SendMessage( "Your resistance to fire has decreased." );
-				ResistanceMod mod1 = new ResistanceMod( ResistanceType.Fire, - amount );
+					if ( IsSlayer == true )
+					{
+						amount = amount * 2;
+						duration = TimeSpan.FromSeconds( (double)(MusicSkill( Caster ) * 2) );
+					}
+
+					m.SendMessage( "Your resistance to fire has decreased." );
+					ResistanceMod mod1 = new ResistanceMod( ResistanceType.Fire, - amount );
+					
+					m.FixedParticles( 0x374A, 10, 30, 5013, 0x489, 2, EffectLayer.Waist );
 				
-				m.FixedParticles( 0x374A, 10, 30, 5013, 0x489, 2, EffectLayer.Waist );
-				
-				m.AddResistanceMod( mod1 );
+					m.AddResistanceMod( mod1 );
 
-				ExpireTimer timer1 = new ExpireTimer( m, mod1, duration );
-				timer1.Start();
+					ExpireTimer timer1 = new ExpireTimer( m, mod1, duration );
+					timer1.Start();
 
-				string args = String.Format("{0}", amount);
-				BuffInfo.RemoveBuff( m, BuffIcon.FireThrenody );
-				BuffInfo.AddBuff( m, new BuffInfo( BuffIcon.FireThrenody, 1063571, 1063572, duration, m, args.ToString(), true));
+					string args = String.Format("{0}", amount);
+					BuffInfo.RemoveBuff( m, BuffIcon.FireThrenody );
+					BuffInfo.AddBuff( m, new BuffInfo( BuffIcon.FireThrenody, 1063571, 1063572, duration, m, args.ToString(), true));
+				}
 			}
 
 			BardFunctions.UseBardInstrument( m_Book.Instrument, sings, Caster );

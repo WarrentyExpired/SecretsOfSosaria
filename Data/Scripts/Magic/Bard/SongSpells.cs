@@ -82,12 +82,6 @@ namespace Server.Spells.Song
                 return;
             }
 
-            if ( m_Book.Instrument == null || m_Book.Instrument.Parent != Caster )
-            {
-                Caster.SendMessage("Your instrument is not equipped!");
-                Caster.SendMessage("You can select another from your song book.");
-                return;
-            }
 		}
 
 		public override void DoFizzle()

@@ -718,14 +718,19 @@ namespace Server.Spells
 			if ( !Necromancy.MindRotSpell.GetMindRotScalar( Caster, ref scalar ) )
 				scalar = 1.0;
 
-			int lmc = AosAttributes.GetValue( m_Caster, AosAttribute.LowerManaCost );
-			if ( lmc > MyServerSettings.LowerMana() )
-				lmc = MyServerSettings.LowerMana();
+                        int lmc = AosAttributes.GetValue( m_Caster, AosAttribute.LowerManaCost );
+                        if ( lmc > MyServerSettings.LowerMana() )
+                                lmc = MyServerSettings.LowerMana();
 
-			scalar -= (double)lmc / 100;
+			if (Caster is PlayerMobile && ((PlayerMobile)Caster).Sorcerer() )
+				lmc = (int)(lmc * 1.5);
 
-			return (int)(mana * scalar);
-		}
+                        scalar -= (double)lmc / 100;
+
+                        return (int)(mana * scalar);
+                }
+
+
 
 		public virtual TimeSpan GetDisturbRecovery()
 		{
