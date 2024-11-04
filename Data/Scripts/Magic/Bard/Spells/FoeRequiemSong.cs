@@ -72,36 +72,24 @@ namespace Server.Spells.Song
 
 					bool IsSlayer = false;
 					if ( m is BaseCreature ){ IsSlayer = CheckSlayer( m_Book.Instrument, m ); }
-					
-					if (Caster is PlayerMobile && ((PlayerMobile)Caster).Troubadour())
+
+					double damage = (double)( MusicSkill( Caster ) / 10 );
+	
+		                        if (Caster is PlayerMobile && ((PlayerMobile)Caster).Troubadour() )
+		                        {
+				              damage = damage * 4;
+		                        }
+
+					if ( IsSlayer )
 					{
-	                                        double damage = (double)( MusicSkill( Caster ) / 5 );
-
-	                                        if ( IsSlayer )
-	                                        {
-	                                                damage = damage * 2;
-	                                        }
-
-	                                        m.FixedParticles( 0x374A, 10, 15, 5028, EffectLayer.Head );
-	                                        source.MovingParticles( m, 0x379F, 7, 0, false, true, 3043, 4043, 0x211 );
-	                                        m.PlaySound( 0x1EA );
-
-	                                        SpellHelper.Damage( this, m, damage, 20, 20, 20, 20, 20 );
+						damage = damage * 2;
 					}
-					else
-					{
-						double damage = (double)( MusicSkill( Caster ) / 15 );
 
-						if ( IsSlayer )
-						{
-							damage = damage * 2;
-						}
+					m.FixedParticles( 0x374A, 10, 15, 5028, EffectLayer.Head );
+					source.MovingParticles( m, 0x379F, 7, 0, false, true, 3043, 4043, 0x211 );
+					m.PlaySound( 0x1EA );
 
-						m.FixedParticles( 0x374A, 10, 15, 5028, EffectLayer.Head );
-						source.MovingParticles( m, 0x379F, 7, 0, false, true, 3043, 4043, 0x211 );
-						m.PlaySound( 0x1EA );
-						SpellHelper.Damage( this, m, damage, 20, 20, 20, 20, 20 );
-					}
+					SpellHelper.Damage( this, m, damage, 20, 20, 20, 20, 20 );
 				}
 
 				BardFunctions.UseBardInstrument( m_Book.Instrument, sings, Caster );
