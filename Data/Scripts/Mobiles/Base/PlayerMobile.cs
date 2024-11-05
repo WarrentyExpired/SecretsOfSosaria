@@ -4099,12 +4099,6 @@ namespace Server.Mobiles
 	                CustomClasses.Activate(this);
 		}
 
-		public override void OnAccessLevelChanged( AccessLevel oldLevel )
-		{
-			if ( AccessLevel == AccessLevel.Player )
-				IgnoreMobiles = false;
-			else
-				IgnoreMobiles = true;
 		}
 
 		public override void OnRawStatChange( StatType stat, int oldValue )
