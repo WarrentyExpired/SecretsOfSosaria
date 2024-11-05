@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Server.Network;
 using Server.Targeting;
 using Server.Misc;
+using Server.Mobiles;
 
 namespace Server.Spells.Fourth
 {
@@ -69,6 +70,9 @@ namespace Server.Spells.Fourth
 				if ( Core.AOS )
 				{
 					int toDrain = 40 + (int)( Spell.ItemSkillValue( Caster, DamageSkill, false ) - GetResistSkill( m ) );
+
+					if (Caster is PlayerMobile && ((PlayerMobile)Caster).Sorcerer() )
+						toDrain = (int)((double)toDrain*1.25);
 
 					if ( toDrain < 0 )
 						toDrain = 0;

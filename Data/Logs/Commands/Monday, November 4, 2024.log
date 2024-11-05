@@ -1,0 +1,179 @@
+##############################
+Log started on 11/4/2024 6:20:48 PM
+
+11/4/2024 6:21:31 PM: : Owner 0x1 "Dungeon Master" ('Admin') used command 'buildworld '
+##############################
+Log started on 11/4/2024 6:25:52 PM
+
+11/4/2024 6:26:35 PM: : Owner 0x1 "Dungeon Master" ('Admin') used command 'buildworld '
+11/4/2024 6:27:05 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'props '
+11/4/2024 6:27:10 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'admin '
+11/4/2024 6:27:20 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'combatbar '
+11/4/2024 6:27:37 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') set property 'Fame' of 0x1 "Dungeon Master" ('Admin') to '50'
+11/4/2024 6:27:50 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') set property 'RawDex' of 0x1 "Dungeon Master" ('Admin') to '70'
+11/4/2024 6:27:57 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') set property 'RawInt' of 0x1 "Dungeon Master" ('Admin') to '80'
+11/4/2024 6:28:17 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') set property '[Musicianship: 120].Base' of 0x1 "Dungeon Master" ('Admin') to '120'
+11/4/2024 6:28:23 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') set property '[Provocation: 100].Base' of 0x1 "Dungeon Master" ('Admin') to '100'
+11/4/2024 6:28:29 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') set property '[Magery: 120].Base' of 0x1 "Dungeon Master" ('Admin') to '120'
+11/4/2024 6:28:38 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') set property '[Psychology: 120].Base' of 0x1 "Dungeon Master" ('Admin') to '120'
+11/4/2024 6:28:46 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'add drums'
+11/4/2024 6:28:48 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') building at (2991, 986, 5) in Sosaria: "drums"
+11/4/2024 6:28:48 PM: 192.168.88.62: Serials: 0x4007F4B9; 
+11/4/2024 6:29:01 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'add songbook'
+11/4/2024 6:29:02 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') building at (3003, 1028, 0) in Sosaria: "songbook"
+11/4/2024 6:29:02 PM: 192.168.88.62: Serials: 0x4007F530; 
+11/4/2024 6:29:59 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'foerequiem '
+11/4/2024 6:30:48 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'props '
+11/4/2024 6:30:53 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') set property 'Content' of 0x4007F530 (SongBook) to '65535'
+11/4/2024 6:31:31 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'foerequiem '
+##############################
+Log started on 11/4/2024 6:31:40 PM
+
+##############################
+Log started on 11/4/2024 6:34:15 PM
+
+11/4/2024 6:34:58 PM: : Owner 0x1 "Dungeon Master" ('Admin') used command 'buildworld '
+11/4/2024 6:35:13 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'admin '
+11/4/2024 6:35:46 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'buildworld '
+11/4/2024 6:36:01 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'add songbook'
+11/4/2024 6:36:03 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') building at (2991, 985, 5) in Sosaria: "songbook"
+11/4/2024 6:36:03 PM: 192.168.88.62: Serials: 0x400F1974; 
+11/4/2024 6:36:05 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'props '
+11/4/2024 6:36:13 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') set property 'Content' of 0x400F1974 (SongBook) to '65535'
+11/4/2024 6:36:18 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'combatbar '
+11/4/2024 6:36:49 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') set property 'Karma' of 0x1 "Dungeon Master" ('Admin') to '500'
+11/4/2024 6:37:00 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') set property 'RawDex' of 0x1 "Dungeon Master" ('Admin') to '70'
+11/4/2024 6:37:06 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') set property 'RawInt' of 0x1 "Dungeon Master" ('Admin') to '80'
+11/4/2024 6:37:16 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') set property '[Musicianship: 120].Base' of 0x1 "Dungeon Master" ('Admin') to '120'
+11/4/2024 6:37:21 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') set property '[Provocation: 120].Base' of 0x1 "Dungeon Master" ('Admin') to '120'
+11/4/2024 6:37:28 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') set property '[Magery: 120].Base' of 0x1 "Dungeon Master" ('Admin') to '120'
+11/4/2024 6:37:34 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') set property '[Psychology: 120].Base' of 0x1 "Dungeon Master" ('Admin') to '120'
+11/4/2024 6:37:38 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'add drums'
+11/4/2024 6:37:40 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') building at (2991, 985, 5) in Sosaria: "drums"
+11/4/2024 6:37:40 PM: 192.168.88.62: Serials: 0x400F21A2; 
+11/4/2024 6:37:49 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'save '
+11/4/2024 6:37:58 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'm tele'
+11/4/2024 6:38:25 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'foerequiem '
+11/4/2024 6:38:37 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'foerequiem '
+11/4/2024 6:38:40 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'foerequiem '
+11/4/2024 6:38:40 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'foerequiem '
+11/4/2024 6:38:41 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'foerequiem '
+11/4/2024 6:38:44 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'save '
+11/4/2024 6:38:55 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'foerequiem '
+11/4/2024 6:38:59 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'foerequiem '
+11/4/2024 6:39:45 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'add drake'
+11/4/2024 6:39:47 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') building at (3071, 1121, 0) in Sosaria: "drake"
+11/4/2024 6:39:47 PM: 192.168.88.62: Serials: 0x1F61E; 
+11/4/2024 6:39:48 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'props '
+11/4/2024 6:39:54 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'props '
+11/4/2024 6:40:01 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'admin '
+11/4/2024 6:40:05 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'Set Frozen True'
+11/4/2024 6:40:07 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') set property 'Frozen' of 0x1F61E "a drake" (no account) to 'True'
+11/4/2024 6:40:11 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'foerequiem '
+11/4/2024 6:40:15 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'foerequiem '
+11/4/2024 6:40:20 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'foerequiem '
+11/4/2024 6:40:44 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'kill '
+11/4/2024 6:40:47 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') killing 0x1F61E "a drake" (no account)
+11/4/2024 6:40:51 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'save '
+##############################
+Log started on 11/4/2024 6:46:51 PM
+
+11/4/2024 6:47:35 PM: : Owner 0x1 "Dungeon Master" ('Admin') used command 'buildworld '
+11/4/2024 6:47:50 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'foerequiem '
+11/4/2024 6:47:58 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'foerequiem '
+11/4/2024 6:48:18 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'add drake'
+11/4/2024 6:48:19 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') building at (3071, 1112, 0) in Sosaria: "drake"
+11/4/2024 6:48:19 PM: 192.168.88.62: Serials: 0xF64B; 
+11/4/2024 6:48:26 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'admin '
+11/4/2024 6:48:37 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') set property '[Peacemaking: 120].Base' of 0x1 "Dungeon Master" ('Admin') to '120'
+11/4/2024 6:48:43 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'save '
+11/4/2024 6:49:03 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'foerequiem '
+11/4/2024 6:49:06 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'foerequiem '
+11/4/2024 6:49:07 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'foerequiem '
+11/4/2024 6:49:14 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'foerequiem '
+11/4/2024 6:49:27 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'props '
+11/4/2024 6:49:56 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') set property 'Slayer' of 0x400F1974 (SongBook) to 'ReptilianDeath'
+11/4/2024 6:49:58 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'foerequiem '
+11/4/2024 6:50:06 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'props '
+11/4/2024 6:50:22 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') set property 'Slayer' of 0x400F21A2 (Drums) to 'ReptilianDeath'
+11/4/2024 6:50:26 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'foerequiem '
+11/4/2024 6:50:37 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'foerequiem '
+11/4/2024 6:50:48 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'foerequiem '
+11/4/2024 6:50:55 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'save '
+##############################
+Log started on 11/4/2024 7:03:31 PM
+
+##############################
+Log started on 11/4/2024 7:08:47 PM
+
+11/4/2024 7:09:31 PM: : Owner 0x1 "Dungeon Master" ('Admin') used command 'buildworld '
+11/4/2024 7:11:09 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'add braclet'
+11/4/2024 7:11:27 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') building at (3065, 1127, 0) in Sosaria: "GiftGoldEarrings"
+11/4/2024 7:11:27 PM: 192.168.88.62: Serials: 0x40080214; 
+11/4/2024 7:12:15 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'add spellbook'
+11/4/2024 7:12:17 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') building at (3444, 3438, 0) in Sosaria: "spellbook"
+11/4/2024 7:12:17 PM: 192.168.88.62: Serials: 0x40080618; 
+11/4/2024 7:12:30 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'props '
+11/4/2024 7:12:38 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') set property 'Content' of 0x40080618 (Spellbook) to '18446744073709551615'
+11/4/2024 7:12:44 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'add necromancerspellbook'
+11/4/2024 7:12:46 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') building at (3445, 3439, 0) in Sosaria: "necromancerspellbook"
+11/4/2024 7:12:46 PM: 192.168.88.62: Serials: 0x40080955; 
+11/4/2024 7:13:04 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'props '
+11/4/2024 7:13:09 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') set property 'Content' of 0x40080955 (NecromancerSpellbook) to '131071'
+11/4/2024 7:13:19 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'add elementalspellbook'
+11/4/2024 7:13:21 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') building at (3444, 3438, 0) in Sosaria: "elementalspellbook"
+11/4/2024 7:13:21 PM: 192.168.88.62: Serials: 0x40080D6F; 
+11/4/2024 7:13:32 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'props '
+11/4/2024 7:13:39 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') set property 'Content' of 0x40080D6F (ElementalSpellbook) to '4294967295'
+11/4/2024 7:13:47 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'save '
+11/4/2024 7:14:26 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'add dagger'
+11/4/2024 7:14:27 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') building at (3443, 3438, 0) in Sosaria: "dagger"
+11/4/2024 7:14:27 PM: 192.168.88.62: Serials: 0x400812E7; 
+11/4/2024 7:14:34 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'add scissors'
+11/4/2024 7:14:36 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') building at (3444, 3438, 0) in Sosaria: "scissors"
+11/4/2024 7:14:36 PM: 192.168.88.62: Serials: 0x40081373; 
+11/4/2024 7:14:49 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'add breadloaf'
+11/4/2024 7:14:51 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') building at (3444, 3438, 0) in Sosaria: "breadloaf"
+11/4/2024 7:14:51 PM: 192.168.88.62: Serials: 0x400814A8; 
+11/4/2024 7:14:54 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'props '
+11/4/2024 7:15:01 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') set property 'Amount' of 0x400814A8 (BreadLoaf) to '10'
+11/4/2024 7:15:06 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'add bandage'
+11/4/2024 7:15:08 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') building at (3444, 3438, 0) in Sosaria: "bandage"
+11/4/2024 7:15:08 PM: 192.168.88.62: Serials: 0x40081606; 
+11/4/2024 7:15:13 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'props '
+11/4/2024 7:15:20 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') set property 'Amount' of 0x40081606 (Bandage) to '300'
+11/4/2024 7:15:33 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'tele '
+11/4/2024 7:16:05 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'tele '
+11/4/2024 7:16:13 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'props '
+11/4/2024 7:16:21 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') set property 'Quantity' of 0x40081A44 (Jug) to '0'
+11/4/2024 7:16:44 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'add runebook'
+11/4/2024 7:16:46 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') building at (2998, 1064, 0) in Sosaria: "runebook"
+11/4/2024 7:16:46 PM: 192.168.88.62: Serials: 0x40081E18; 
+11/4/2024 7:16:54 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'add recallrune'
+11/4/2024 7:16:56 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') building at (2998, 1063, 0) in Sosaria: "recallrune"
+11/4/2024 7:16:56 PM: 192.168.88.62: Serials: 0x40081EFA; 
+11/4/2024 7:17:00 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'dupe '
+11/4/2024 7:17:00 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') duping 0x40081EFA (RecallRune) (inBag=False; amount=1)
+11/4/2024 7:17:00 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') duped 0x40081EFA (RecallRune) creating 0x40081EFB (RecallRune)
+11/4/2024 7:17:01 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'dupe '
+11/4/2024 7:17:01 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') duping 0x40081EFA (RecallRune) (inBag=False; amount=1)
+11/4/2024 7:17:01 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') duped 0x40081EFA (RecallRune) creating 0x40081F65 (RecallRune)
+11/4/2024 7:17:01 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'dupe '
+11/4/2024 7:17:02 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') duping 0x40081EFA (RecallRune) (inBag=False; amount=1)
+11/4/2024 7:17:02 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') duped 0x40081EFA (RecallRune) creating 0x40081F66 (RecallRune)
+11/4/2024 7:17:02 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'dupe '
+11/4/2024 7:17:02 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') duping 0x40081EFA (RecallRune) (inBag=False; amount=1)
+11/4/2024 7:17:02 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') duped 0x40081EFA (RecallRune) creating 0x40081F67 (RecallRune)
+11/4/2024 7:17:02 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'dupe '
+11/4/2024 7:17:03 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') duping 0x40081EFA (RecallRune) (inBag=False; amount=1)
+11/4/2024 7:17:03 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') duped 0x40081EFA (RecallRune) creating 0x40081F68 (RecallRune)
+11/4/2024 7:17:03 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'dupe '
+11/4/2024 7:17:03 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') duping 0x40081EFA (RecallRune) (inBag=False; amount=1)
+11/4/2024 7:17:03 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') duped 0x40081EFA (RecallRune) creating 0x40081F69 (RecallRune)
+11/4/2024 7:17:32 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'M Tele'
+11/4/2024 7:18:42 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'M Tele'
+11/4/2024 7:19:11 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'tele '
+11/4/2024 7:19:49 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'M Tele'
+11/4/2024 7:20:37 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'M Tele'
+11/4/2024 7:21:27 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'save '
+11/4/2024 7:22:10 PM: 192.168.88.62: Owner 0x1 "Dungeon Master" ('Admin') used command 'save '

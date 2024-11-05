@@ -6,6 +6,10 @@ using Server.Network;
 
 namespace Server.Items
 {
+    public interface IClothingStub
+    {
+    }
+
 	public enum ClothingQuality
 	{
 		Low,

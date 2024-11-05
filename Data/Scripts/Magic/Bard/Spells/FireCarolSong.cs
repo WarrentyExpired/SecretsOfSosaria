@@ -48,24 +48,48 @@ namespace Server.Spells.Song
 				{
 					Mobile m = (Mobile)targets[i];
 					
-					TimeSpan duration = TimeSpan.FromSeconds( (double)(MusicSkill( Caster ) * 2) );
-                    int amount = MyServerSettings.PlayerLevelMod( (int)(MusicSkill( Caster ) / 16), Caster );
+                                        if (Caster is PlayerMobile && ((PlayerMobile)Caster).Troubadour())
+					{
+	                                        TimeSpan duration = TimeSpan.FromSeconds( (double)(MusicSkill( Caster ) * 3) );
+	                                        int amount = MyServerSettings.PlayerLevelMod( (int)(MusicSkill( Caster ) / 10), Caster );
 
-					if ( ( amount + m.FireResistance ) > MySettings.S_MaxResistance )
-						amount = MySettings.S_MaxResistance - m.FireResistance;
+	                                        if ( ( amount + m.FireResistance ) > MySettings.S_MaxResistance )
+                                                amount = MySettings.S_MaxResistance - m.FireResistance;
 
-					m.SendMessage( "Your resistance to fire has increased." );
-					ResistanceMod mod1 = new ResistanceMod( ResistanceType.Fire, + amount );
-						
-					m.AddResistanceMod( mod1 );
-						
-					m.FixedParticles( 0x373A, 10, 15, 5012, 0x21, 3, EffectLayer.Waist );
-						
-					new ExpireTimer( m, mod1, duration ).Start();
+	                                        m.SendMessage( "Your resistance to fire has increased." );
+	                                        ResistanceMod mod1 = new ResistanceMod( ResistanceType.Fire, + amount );
 
-					string args = String.Format("{0}", amount);
-					BuffInfo.RemoveBuff( m, BuffIcon.FireCarol );
-					BuffInfo.AddBuff( m, new BuffInfo( BuffIcon.FireCarol, 1063569, 1063570, duration, m, args.ToString(), true));
+	                                        m.AddResistanceMod( mod1 );
+
+	                                        m.FixedParticles( 0x373A, 10, 15, 5012, 0x21, 3, EffectLayer.Waist );
+
+	                                        new ExpireTimer( m, mod1, duration ).Start();
+
+	                                        string args = String.Format("{0}", amount);
+	                                        BuffInfo.RemoveBuff( m, BuffIcon.FireCarol );
+	                                        BuffInfo.AddBuff( m, new BuffInfo( BuffIcon.FireCarol, 1063569, 1063570, duration, m, args.ToString(), true));
+					}
+					else
+					{
+						TimeSpan duration = TimeSpan.FromSeconds( (double)(MusicSkill( Caster ) * 2) );
+			                        int amount = MyServerSettings.PlayerLevelMod( (int)(MusicSkill( Caster ) / 16), Caster );
+
+						if ( ( amount + m.FireResistance ) > MySettings.S_MaxResistance )
+							amount = MySettings.S_MaxResistance - m.FireResistance;
+
+						m.SendMessage( "Your resistance to fire has increased." );
+						ResistanceMod mod1 = new ResistanceMod( ResistanceType.Fire, + amount );
+						
+						m.AddResistanceMod( mod1 );
+						
+						m.FixedParticles( 0x373A, 10, 15, 5012, 0x21, 3, EffectLayer.Waist );
+						
+						new ExpireTimer( m, mod1, duration ).Start();
+
+						string args = String.Format("{0}", amount);
+						BuffInfo.RemoveBuff( m, BuffIcon.FireCarol );
+						BuffInfo.AddBuff( m, new BuffInfo( BuffIcon.FireCarol, 1063569, 1063570, duration, m, args.ToString(), true));
+					}
 				}
 			}
 

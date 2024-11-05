@@ -586,6 +586,13 @@ namespace Server.Mobiles
 		}
 		#endregion
 
+                private bool m_isdiscorded;
+
+                public bool IsDiscorded {
+                        get { return m_isdiscorded; }
+                        set { m_isdiscorded = value;}
+                }
+
 		#region Delete Previously Tamed Timer
 		private DeleteTimer		m_DeleteTimer;
 

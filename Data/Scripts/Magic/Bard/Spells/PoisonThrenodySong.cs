@@ -68,27 +68,53 @@ namespace Server.Spells.Song
 
 				bool IsSlayer = false;
 				if ( m is BaseCreature ){ IsSlayer = CheckSlayer( m_Book.Instrument, m ); }
-
-                int amount = (int)(MusicSkill( Caster ) / 16);
-				TimeSpan duration = TimeSpan.FromSeconds( (double)(MusicSkill( Caster )) );
-
-				if ( IsSlayer == true )
-				{
-					amount = amount * 2;
-					duration = TimeSpan.FromSeconds( (double)(MusicSkill( Caster ) * 2) );
-				}
-
-				m.SendMessage( "Your resistance to poison has decreased." );
-				ResistanceMod mod1 = new ResistanceMod( ResistanceType.Poison, - amount );
 				
-				m.AddResistanceMod( mod1 );
+                                if (Caster is PlayerMobile && ((PlayerMobile)Caster).Troubadour())
+				{				
+			                int amount = (int)(MusicSkill( Caster ) / 10);
+					TimeSpan duration = TimeSpan.FromSeconds( (double)(MusicSkill( Caster ) * 3) );
 
-				ExpireTimer timer1 = new ExpireTimer( m, mod1, duration );
-				timer1.Start();
+					if ( IsSlayer == true )
+					{
+						amount = amount * 2;
+						duration = TimeSpan.FromSeconds( (double)(MusicSkill( Caster ) * 2) );
+					}
 
-				string args = String.Format("{0}", amount);
-				BuffInfo.RemoveBuff( m, BuffIcon.PoisonThrenody );
-				BuffInfo.AddBuff( m, new BuffInfo( BuffIcon.PoisonThrenody, 1063583, 1063584, duration, m, args.ToString(), true));
+					m.SendMessage( "Your resistance to poison has decreased." );
+					ResistanceMod mod1 = new ResistanceMod( ResistanceType.Poison, - amount );
+				
+					m.AddResistanceMod( mod1 );
+
+					ExpireTimer timer1 = new ExpireTimer( m, mod1, duration );
+					timer1.Start();
+
+					string args = String.Format("{0}", amount);
+					BuffInfo.RemoveBuff( m, BuffIcon.PoisonThrenody );
+					BuffInfo.AddBuff( m, new BuffInfo( BuffIcon.PoisonThrenody, 1063583, 1063584, duration, m, args.ToString(), true));
+				}
+				else
+				{
+                                        int amount = (int)(MusicSkill( Caster ) / 16);
+                                        TimeSpan duration = TimeSpan.FromSeconds( (double)(MusicSkill( Caster )) );
+
+                                        if ( IsSlayer == true )
+                                        {
+                                                amount = amount * 2;
+                                                duration = TimeSpan.FromSeconds( (double)(MusicSkill( Caster ) * 2) );
+                                        }
+
+                                        m.SendMessage( "Your resistance to poison has decreased." );
+                                        ResistanceMod mod1 = new ResistanceMod( ResistanceType.Poison, - amount );
+
+                                        m.AddResistanceMod( mod1 );
+
+                                        ExpireTimer timer1 = new ExpireTimer( m, mod1, duration );
+                                        timer1.Start();
+
+                                        string args = String.Format("{0}", amount);
+                                        BuffInfo.RemoveBuff( m, BuffIcon.PoisonThrenody );
+                                        BuffInfo.AddBuff( m, new BuffInfo( BuffIcon.PoisonThrenody, 1063583, 1063584, duration, m, args.ToString(), true));
+				}
 			}
 
 			BardFunctions.UseBardInstrument( m_Book.Instrument, sings, Caster );

@@ -836,11 +836,12 @@ namespace Server.Items
 
 		public override void OnDoubleClick( Mobile from )
 		{
-			if ( Parent != from )
+			/*if ( Parent != from )
 			{
 				from.SendLocalizedMessage( 502641 ); // You must equip this item to use it.
 			}
-			else if ( from.BeginAction( typeof( BaseInstrument ) ) )
+			else*/ 
+			if ( from.BeginAction( typeof( BaseInstrument ) ) )
 			{
 				SetInstrument( from, this );
 				this.ConsumeUse( from );

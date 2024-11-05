@@ -47,25 +47,49 @@ namespace Server.Spells.Song
 				for ( int i = 0; i < targets.Count; ++i )
 				{
 					Mobile m = (Mobile)targets[i];
-					
-					TimeSpan duration = TimeSpan.FromSeconds( (double)(MusicSkill( Caster ) * 2) );
-                    int amount = MyServerSettings.PlayerLevelMod( (int)(MusicSkill( Caster ) / 16), Caster );
+                                        if (Caster is PlayerMobile && ((PlayerMobile)Caster).Troubadour())
+					{
+						TimeSpan duration = TimeSpan.FromSeconds( (double)(MusicSkill( Caster ) * 3) );
+			                        int amount = MyServerSettings.PlayerLevelMod( (int)(MusicSkill( Caster ) / 10), Caster );
 
-					if ( ( amount + m.PhysicalResistance ) > MySettings.S_MaxResistance )
-						amount = MySettings.S_MaxResistance - m.PhysicalResistance;
+						if ( ( amount + m.PhysicalResistance ) > MySettings.S_MaxResistance )
+							amount = MySettings.S_MaxResistance - m.PhysicalResistance;
 	
-					m.SendMessage( "Your resistance to physical attacks has increased." );
-					ResistanceMod mod1 = new ResistanceMod( ResistanceType.Physical, + amount );
+						m.SendMessage( "Your resistance to physical attacks has increased." );
+						ResistanceMod mod1 = new ResistanceMod( ResistanceType.Physical, + amount );
 						
-					m.AddResistanceMod( mod1 );
+						m.AddResistanceMod( mod1 );
 						
-					m.FixedParticles( 0x373A, 10, 15, 5012, 0x450, 3, EffectLayer.Waist );
+						m.FixedParticles( 0x373A, 10, 15, 5012, 0x450, 3, EffectLayer.Waist );
 						
-					new ExpireTimer( m, mod1, duration ).Start();
+						new ExpireTimer( m, mod1, duration ).Start();
 
-					string args = String.Format("{0}", amount);
-					BuffInfo.RemoveBuff( m, BuffIcon.KnightsMinne );
-					BuffInfo.AddBuff( m, new BuffInfo( BuffIcon.KnightsMinne, 1063577, 1063578, duration, m, args.ToString(), true));
+						string args = String.Format("{0}", amount);
+						BuffInfo.RemoveBuff( m, BuffIcon.KnightsMinne );
+						BuffInfo.AddBuff( m, new BuffInfo( BuffIcon.KnightsMinne, 1063577, 1063578, duration, m, args.ToString(), true));
+					}
+					else
+					{
+                                                TimeSpan duration = TimeSpan.FromSeconds( (double)(MusicSkill( Caster ) * 2) );
+                                                int amount = MyServerSettings.PlayerLevelMod( (int)(MusicSkill( Caster ) / 16), Caster );
+
+                                                if ( ( amount + m.PhysicalResistance ) > MySettings.S_MaxResistance )
+                                                        amount = MySettings.S_MaxResistance - m.PhysicalResistance;
+
+                                                m.SendMessage( "Your resistance to physical attacks has increased." );
+                                                ResistanceMod mod1 = new ResistanceMod( ResistanceType.Physical, + amount );
+
+                                                m.AddResistanceMod( mod1 );
+
+                                                m.FixedParticles( 0x373A, 10, 15, 5012, 0x450, 3, EffectLayer.Waist );
+
+                                                new ExpireTimer( m, mod1, duration ).Start();
+
+                                                string args = String.Format("{0}", amount);
+                                                BuffInfo.RemoveBuff( m, BuffIcon.KnightsMinne );
+                                                BuffInfo.AddBuff( m, new BuffInfo( BuffIcon.KnightsMinne, 1063577, 1063578, duration, m, args.ToString(), true));
+
+					}
 				}
 			}
 

@@ -49,25 +49,48 @@ namespace Server.Spells.Song
 				for ( int i = 0; i < targets.Count; ++i )
 				{
 					Mobile m = (Mobile)targets[i];
-					
-					TimeSpan duration = TimeSpan.FromSeconds( (double)(MusicSkill( Caster ) * 2) );
-                    int amount = MyServerSettings.PlayerLevelMod( (int)(MusicSkill( Caster ) / 16), Caster );
+                                        if (Caster is PlayerMobile && ((PlayerMobile)Caster).Troubadour())
+					{					
+						TimeSpan duration = TimeSpan.FromSeconds( (double)(MusicSkill( Caster ) * 3) );
+				                int amount = MyServerSettings.PlayerLevelMod( (int)(MusicSkill( Caster ) / 10), Caster );
 	
-					if ( ( amount + m.PoisonResistance ) > MySettings.S_MaxResistance )
-						amount = MySettings.S_MaxResistance - m.PoisonResistance;
+						if ( ( amount + m.PoisonResistance ) > MySettings.S_MaxResistance )
+							amount = MySettings.S_MaxResistance - m.PoisonResistance;
 
-					m.SendMessage( "Your resistance to poison has increased." );
-					ResistanceMod mod1 = new ResistanceMod( ResistanceType.Poison, + amount );
+						m.SendMessage( "Your resistance to poison has increased." );
+						ResistanceMod mod1 = new ResistanceMod( ResistanceType.Poison, + amount );
 						
-					m.AddResistanceMod( mod1 );
+						m.AddResistanceMod( mod1 );
 						
-					m.FixedParticles( 0x373A, 10, 15, 5012, 0x238, 3, EffectLayer.Waist );
+						m.FixedParticles( 0x373A, 10, 15, 5012, 0x238, 3, EffectLayer.Waist );
 						
-					new ExpireTimer( m, mod1, duration ).Start();
+						new ExpireTimer( m, mod1, duration ).Start();
 
-					string args = String.Format("{0}", amount);
-					BuffInfo.RemoveBuff( m, BuffIcon.PoisonCarol );
-					BuffInfo.AddBuff( m, new BuffInfo( BuffIcon.PoisonCarol, 1063581, 1063582, duration, m, args.ToString(), true));
+						string args = String.Format("{0}", amount);
+						BuffInfo.RemoveBuff( m, BuffIcon.PoisonCarol );
+						BuffInfo.AddBuff( m, new BuffInfo( BuffIcon.PoisonCarol, 1063581, 1063582, duration, m, args.ToString(), true));
+					}
+					else
+					{
+                                                TimeSpan duration = TimeSpan.FromSeconds( (double)(MusicSkill( Caster ) * 2) );
+                                                int amount = MyServerSettings.PlayerLevelMod( (int)(MusicSkill( Caster ) / 16), Caster );
+
+                                                if ( ( amount + m.PoisonResistance ) > MySettings.S_MaxResistance )
+                                                        amount = MySettings.S_MaxResistance - m.PoisonResistance;
+
+                                                m.SendMessage( "Your resistance to poison has increased." );
+                                                ResistanceMod mod1 = new ResistanceMod( ResistanceType.Poison, + amount );
+
+                                                m.AddResistanceMod( mod1 );
+
+                                                m.FixedParticles( 0x373A, 10, 15, 5012, 0x238, 3, EffectLayer.Waist );
+
+                                                new ExpireTimer( m, mod1, duration ).Start();
+
+                                                string args = String.Format("{0}", amount);
+                                                BuffInfo.RemoveBuff( m, BuffIcon.PoisonCarol );
+                                                BuffInfo.AddBuff( m, new BuffInfo( BuffIcon.PoisonCarol, 1063581, 1063582, duration, m, args.ToString(), true));
+					}
 				}
 			}
 

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Server.Misc;
 using Server.Targeting;
 using Server.Network;
+using Server.Mobiles;
 
 namespace Server.Spells.Sixth
 {
@@ -49,6 +50,7 @@ namespace Server.Spells.Sixth
 
 				if ( map != null )
 				{
+					int range = (Caster is PlayerMobile) && ((PlayerMobile)Caster).Sorcerer() ? 5 : 2;
 					IPooledEnumerable eable = map.GetMobilesInRange( new Point3D( p ), 2 );
 
 					foreach ( Mobile m in eable )

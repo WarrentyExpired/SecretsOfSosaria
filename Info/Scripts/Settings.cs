@@ -37,7 +37,7 @@ namespace Server
 	// single player, and you turn the server on/off as required, then set this to true so these routines at least run
 	// when you start the game for you.
 
-		public static bool S_RunRoutinesAtStartup = true;
+		public static bool S_RunRoutinesAtStartup = false;
 
 	// This setting is the number of days a character must exist before a player can delete them.
 
@@ -49,7 +49,7 @@ namespace Server
 
 	// The port you want your server to listen on.
 
-		public static int S_Port = 2593;
+		public static int S_Port = 8085;
 
 	// If you want to enter your IP for external connections, you can enter it here. Otherwise, the autodetect function
 	// below can likely do it for you automatically.
@@ -722,7 +722,7 @@ namespace Server
 	// game. Any settings here, that interfere with your enjoyment of the game, are under your
 	// control and you can change these settings at any time if you wish to.
 
-		public static bool S_Reviewed = false;
+		public static bool S_Reviewed = true;
 
 
 	}

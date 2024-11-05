@@ -47,25 +47,48 @@ namespace Server.Spells.Song
 				for ( int i = 0; i < targets.Count; ++i )
 				{
 					Mobile m = (Mobile)targets[i];
-					
-					TimeSpan duration = TimeSpan.FromSeconds( (double)(MusicSkill( Caster ) * 2) ); 
-                    int amount = MyServerSettings.PlayerLevelMod( (int)(MusicSkill( Caster ) / 16), Caster );
+                                        if (Caster is PlayerMobile && ((PlayerMobile)Caster).Troubadour())
+					{
+	                                        TimeSpan duration = TimeSpan.FromSeconds( (double)(MusicSkill( Caster ) * 2) );
+	                                        int amount = MyServerSettings.PlayerLevelMod( (int)(MusicSkill( Caster ) / 16), Caster );
 
-					if ( ( amount + m.ColdResistance ) > MySettings.S_MaxResistance )
-						amount = MySettings.S_MaxResistance - m.ColdResistance;
+	                                        if ( ( amount + m.ColdResistance ) > MySettings.S_MaxResistance )
+	                                                amount = MySettings.S_MaxResistance - m.ColdResistance;
+
+	                                        m.SendMessage( "Your resistance to cold has increased." );
+	                                        ResistanceMod mod1 = new ResistanceMod( ResistanceType.Cold, + amount );
+
+	                                        m.AddResistanceMod( mod1 );
+
+	                                        m.FixedParticles( 0x373A, 10, 15, 5012, 0x480, 3, EffectLayer.Waist );
+
+	                                        new ExpireTimer( m, mod1, duration ).Start();
+
+	                                        string args = String.Format("{0}", amount);
+	                                        BuffInfo.RemoveBuff( m, BuffIcon.IceCarol );
+	                                        BuffInfo.AddBuff( m, new BuffInfo( BuffIcon.IceCarol, 1063573, 1063574, duration, m, args.ToString(), true));
+					}
+					else
+					{
+						TimeSpan duration = TimeSpan.FromSeconds( (double)(MusicSkill( Caster ) * 2) ); 
+			                        int amount = MyServerSettings.PlayerLevelMod( (int)(MusicSkill( Caster ) / 16), Caster );
+
+						if ( ( amount + m.ColdResistance ) > MySettings.S_MaxResistance )
+							amount = MySettings.S_MaxResistance - m.ColdResistance;
 	
-					m.SendMessage( "Your resistance to cold has increased." );
-					ResistanceMod mod1 = new ResistanceMod( ResistanceType.Cold, + amount );
+						m.SendMessage( "Your resistance to cold has increased." );
+						ResistanceMod mod1 = new ResistanceMod( ResistanceType.Cold, + amount );
 						
-					m.AddResistanceMod( mod1 );
+						m.AddResistanceMod( mod1 );
 						
-					m.FixedParticles( 0x373A, 10, 15, 5012, 0x480, 3, EffectLayer.Waist );
+						m.FixedParticles( 0x373A, 10, 15, 5012, 0x480, 3, EffectLayer.Waist );
 						
-					new ExpireTimer( m, mod1, duration ).Start();
+						new ExpireTimer( m, mod1, duration ).Start();
 
-					string args = String.Format("{0}", amount);
-					BuffInfo.RemoveBuff( m, BuffIcon.IceCarol );
-					BuffInfo.AddBuff( m, new BuffInfo( BuffIcon.IceCarol, 1063573, 1063574, duration, m, args.ToString(), true));
+						string args = String.Format("{0}", amount);
+						BuffInfo.RemoveBuff( m, BuffIcon.IceCarol );
+						BuffInfo.AddBuff( m, new BuffInfo( BuffIcon.IceCarol, 1063573, 1063574, duration, m, args.ToString(), true));
+					}
 				}
 			}
 

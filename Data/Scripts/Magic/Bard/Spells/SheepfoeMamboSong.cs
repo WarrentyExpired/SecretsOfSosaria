@@ -47,21 +47,38 @@ namespace Server.Spells.Song
 				for ( int i = 0; i < targets.Count; ++i )
 				{
 					Mobile m = (Mobile)targets[i];
-
-                    int amount = MyServerSettings.PlayerLevelMod( (int)(MusicSkill( Caster ) / 16), Caster );
 					string dex = "dex";
-						
-					double duration = (double)(MusicSkill( Caster ) * 2);
-						
-					StatMod mod = new StatMod( StatType.Dex, dex, + amount, TimeSpan.FromSeconds( duration ) );
-						
-					m.AddStatMod( mod );
-						
-					m.FixedParticles( 0x375A, 10, 15, 5017, 0x224, 3, EffectLayer.Waist );
 
-					string args = String.Format("{0}", amount);
-					BuffInfo.RemoveBuff( m, BuffIcon.ShephardsDance );
-					BuffInfo.AddBuff( m, new BuffInfo( BuffIcon.ShephardsDance, 1063585, 1063586, TimeSpan.FromSeconds( duration ), m, args.ToString(), true));
+                                        if (Caster is PlayerMobile && ((PlayerMobile)Caster).Troubadour())
+					{	
+	                                        int amount = MyServerSettings.PlayerLevelMod( (int)(MusicSkill( Caster ) / 10), Caster );
+						double duration = (double)(MusicSkill( Caster ) * 3);
+						
+						StatMod mod = new StatMod( StatType.Dex, dex, + amount, TimeSpan.FromSeconds( duration ) );
+						
+						m.AddStatMod( mod );
+						
+						m.FixedParticles( 0x375A, 10, 15, 5017, 0x224, 3, EffectLayer.Waist );
+
+						string args = String.Format("{0}", amount);
+						BuffInfo.RemoveBuff( m, BuffIcon.ShephardsDance );
+						BuffInfo.AddBuff( m, new BuffInfo( BuffIcon.ShephardsDance, 1063585, 1063586, TimeSpan.FromSeconds( duration ), m, args.ToString(), true));
+					}
+					else
+					{
+	                                        int amount = MyServerSettings.PlayerLevelMod( (int)(MusicSkill( Caster ) / 16), Caster );
+                                                double duration = (double)(MusicSkill( Caster ) * 2);
+
+                                                StatMod mod = new StatMod( StatType.Dex, dex, + amount, TimeSpan.FromSeconds( duration ) );
+
+                                                m.AddStatMod( mod );
+
+                                                m.FixedParticles( 0x375A, 10, 15, 5017, 0x224, 3, EffectLayer.Waist );
+
+                                                string args = String.Format("{0}", amount);
+                                                BuffInfo.RemoveBuff( m, BuffIcon.ShephardsDance );
+                                                BuffInfo.AddBuff( m, new BuffInfo( BuffIcon.ShephardsDance, 1063585, 1063586, TimeSpan.FromSeconds( duration ), m, args.ToString(), true));
+					}
 				}
 			}
 

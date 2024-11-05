@@ -75,7 +75,12 @@ namespace Server.Spells.Song
 
 					double damage = (double)( MusicSkill( Caster ) / 15 );
 
+                         if (Caster is PlayerMobile && ((PlayerMobile)Caster).Troubadour() )
+                         {
+                              damage = damage * 4;
+                         }
 					if ( IsSlayer )
+
 					{
 						damage = damage * 2;
 					}

@@ -2,6 +2,7 @@ using System;
 using Server.Targeting;
 using Server.Network;
 using Server.Misc;
+using Server.Mobiles;
 
 namespace Server.Spells.Seventh
 {
@@ -46,16 +47,26 @@ namespace Server.Spells.Seventh
 				m.Paralyzed = false;
 				BuffInfo.CleanupIcons( m, true );
 
-				int toDrain = (int)( Spell.ItemSkillValue( Caster, DamageSkill, false ) - GetResistSkill( m ) );
+				int toDrain = 0; //(int)( Spell.ItemSkillValue( Caster, DamageSkill, false ) - GetResistSkill( m ) );
 
-				if ( !m.Player )
-					toDrain /= 2;
+				if (Caster is PlayerMobile && ((PlayerMobile)Caster).Sorcerer() )
+					toDrain = (int)((GetDamageSkill( Caster )*1.5) - GetResistSkill( m ));
+				else
+					toDrain = (int)(GetDamageSkill( Caster ) - GetResistSkill( m ));
 
 				if ( toDrain < 0 )
 					toDrain = 0;
 				else if ( toDrain > m.Mana )
 					toDrain = m.Mana;
 
+				/*if ( !m.Player )
+					toDrain /= 2;
+
+				if ( toDrain < 0 )
+					toDrain = 0;
+				else if ( toDrain > m.Mana )
+					toDrain = m.Mana;
+				*/
 				if ( toDrain > (Caster.ManaMax - Caster.Mana) )
 					toDrain = Caster.ManaMax - Caster.Mana;
 

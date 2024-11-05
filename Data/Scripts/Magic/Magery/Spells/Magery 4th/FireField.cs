@@ -76,6 +76,9 @@ namespace Server.Spells.Fourth
 
 				int damage = (int)( Spell.ItemSkillValue( Caster, SkillName.Magery, false ) / 10 );
 
+				if (Caster is PlayerMobile && ((PlayerMobile)Caster).Sorcerer() )
+					damage *= 7;
+
 				int nBenefit = 0;
 				if ( Caster is PlayerMobile )
 					nBenefit = (int)(Caster.Skills[SkillName.Magery].Value / 2);

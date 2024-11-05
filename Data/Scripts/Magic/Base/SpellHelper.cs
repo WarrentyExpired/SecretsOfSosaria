@@ -456,6 +456,9 @@ namespace Server.Spells
 
 			double scale = 1.0 + ((Spell.ItemSkillValue( caster, SkillName.Magery, false ) - 100.0) / 200.0);
 
+			if (caster is PlayerMobile && ((PlayerMobile)caster).Sorcerer() )
+				scale += 0.50;
+
 			if( scaleDuration )
 				duration = TimeSpan.FromSeconds( duration.TotalSeconds * scale );
 
@@ -469,6 +472,12 @@ namespace Server.Spells
 
 				creature.RawInt = (int)(creature.RawInt * scale);
 				creature.Mana = creature.ManaMax;
+
+				if (caster is PlayerMobile && ((PlayerMobile)caster).Sorcerer() )
+				{
+					creature.DamageMin = (int)((double)creature.DamageMin * scale);
+					creature.DamageMax = (int)((double)creature.DamageMax * scale);
+				}
 			}
 
 			Point3D p = new Point3D( caster );
