@@ -49,8 +49,8 @@ namespace Server.Spells.Song
 					Mobile m = (Mobile)targets[i];
                                         if (Caster is PlayerMobile && ((PlayerMobile)Caster).Troubadour())
 					{
-	                                        TimeSpan duration = TimeSpan.FromSeconds( (double)(MusicSkill( Caster ) * 2) );
-	                                        int amount = MyServerSettings.PlayerLevelMod( (int)(MusicSkill( Caster ) / 16), Caster );
+	                                        TimeSpan duration = TimeSpan.FromSeconds( (double)(MusicSkill( Caster ) * 3) );
+	                                        int amount = MyServerSettings.PlayerLevelMod( (int)(MusicSkill( Caster ) / 10), Caster );
 
 	                                        if ( ( amount + m.ColdResistance ) > MySettings.S_MaxResistance )
 	                                                amount = MySettings.S_MaxResistance - m.ColdResistance;
